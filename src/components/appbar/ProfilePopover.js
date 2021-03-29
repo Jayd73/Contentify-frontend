@@ -64,7 +64,7 @@ function ProfilePopover({ anchorEl, setAnchorEl }) {
           <Typography variant="h6" style={{ marginLeft: "0.5em" }}>
             National Geographic
           </Typography>
-          <Typography style={{ fontSize: "1em", marginLeft: "0.5em" }}>
+          <Typography style={{ fontSize: "1em", marginLeft: "0.6em" }}>
             natgeo@gmail.com
           </Typography>
         </ListItemText>

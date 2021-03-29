@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(20),
     height: theme.spacing(20),
     borderStyle: "solid",
-    borderWidth: 4,
+    borderWidth: 6,
     borderColor: theme.palette.appBg.dark,
   },
   badgeStyle: {
@@ -29,10 +30,23 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(5),
     backgroundColor: theme.palette.primary.main,
   },
+  input: {
+    display: "none",
+  },
 }));
 
 function UserAvatar({ editable }) {
   const classes = useStyles();
+  const [postimage, setPostImage] = useState(null);
+
+  const handleChange = (e) => {
+    if ([e.target.name] == "avatarImg") {
+      setPostImage({
+        image: e.target.files,
+      });
+      console.log(e.target.files);
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -44,11 +58,22 @@ function UserAvatar({ editable }) {
             horizontal: "right",
           }}
           badgeContent={
-            <IconButton>
-              <Avatar className={classes.badgeStyle}>
-                <AddAPhotoIcon fontSize="small" />
-              </Avatar>
-            </IconButton>
+            <>
+              <input
+                accept="image/*"
+                className={classes.input}
+                id="icon-button-file"
+                name="avatarImg"
+                type="file"
+              />
+              <label htmlFor="icon-button-file">
+                <IconButton component="span">
+                  <Avatar className={classes.badgeStyle}>
+                    <AddAPhotoIcon fontSize="small" />
+                  </Avatar>
+                </IconButton>
+              </label>
+            </>
           }
         >
           <Avatar

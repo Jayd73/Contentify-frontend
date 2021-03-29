@@ -61,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
+  input: {
+    display: "none",
+  },
 }));
 
 function ChannelContainer() {
@@ -112,18 +115,31 @@ function ChannelContainer() {
           className={classes.bannerImg}
         />
         {editable ? (
-          <Button
-            color="primary"
-            variant="contained"
-            style={{
-              position: "absolute",
-              marginTop: "14em",
-              marginLeft: "-5em",
-              backgroundColor: "rgba(0,0,0,0.3)",
-            }}
-          >
-            <AddAPhotoIcon fontSize="small" />
-          </Button>
+          <>
+            <input
+              accept="image/*"
+              className={classes.input}
+              id="icon-button-file"
+              name="bannerImg"
+              type="file"
+            />
+
+            <label htmlFor="icon-button-file">
+              <Button
+                color="primary"
+                variant="contained"
+                component="span"
+                style={{
+                  position: "absolute",
+                  marginTop: "14em",
+                  marginLeft: "-5em",
+                  backgroundColor: "rgba(0,0,0,0.3)",
+                }}
+              >
+                <AddAPhotoIcon fontSize="small" />
+              </Button>
+            </label>
+          </>
         ) : (
           ""
         )}

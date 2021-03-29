@@ -84,9 +84,21 @@ export default function SignIn() {
         localStorage.setItem("refresh_token", res.data.refresh);
         axiosInstance.defaults.headers["Authorization"] =
           "JWT " + localStorage.getItem("access_token");
+
+        axiosInstance
+          .post(`channel/curruser`, {
+            username: formData.username,
+          })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.log("Error from API: ", error.response.data);
+          });
+
         history.push("/videos");
         //console.log(res);
-        //console.log(res.data);
+        // console.log(res.data);
       })
       .catch((errors) => {
         // console.log("Error when Login: ", errors.response.data);
