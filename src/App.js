@@ -11,6 +11,8 @@ import PostContainer from "./components/mainContainer/PostContainer";
 import AudioContainer from "./components/mainContainer/AudioContainer";
 import ChannelContainer from "./components/mainContainer/ChannelContainer";
 
+import UserProfile from "./components/channelComponent/UserProfile";
+
 import { Route, Switch } from "react-router-dom";
 
 function App() {
@@ -51,7 +53,13 @@ function App() {
         <Route
           exact
           from="/channel/cname"
-          component={() => <MainApp ChildComponent={ChannelContainer} />}
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserProfile} />
+              )}
+            />
+          )}
         />
       </Switch>
     </>

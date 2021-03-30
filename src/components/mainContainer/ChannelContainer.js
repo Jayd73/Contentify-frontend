@@ -38,11 +38,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.iconColor,
   },
   bannerImg: {
-    height: "15em",
+    height: "16em",
     width: "100%",
   },
   channelHeader: {
     marginTop: "-4px",
+    paddingBottom: "0.5em",
     display: "flex",
     backgroundColor: theme.palette.appBg.dark,
   },
@@ -66,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ChannelContainer() {
+function ChannelContainer({ ChildComponent }) {
   const classes = useStyles();
   const editable = true;
 
@@ -111,7 +112,7 @@ function ChannelContainer() {
       </Drawer>
       <div>
         <img
-          src="https://i.pinimg.com/originals/7c/ed/32/7ced32d6cfb80d49545444c0a382de3b.jpg"
+          src="https://vistapointe.net/images/cosmos-a-spacetime-odyssey-wallpaper-10.jpg"
           className={classes.bannerImg}
         />
         {editable ? (
@@ -131,8 +132,8 @@ function ChannelContainer() {
                 component="span"
                 style={{
                   position: "absolute",
-                  marginTop: "14em",
-                  marginLeft: "-5em",
+                  marginTop: "15em",
+                  marginLeft: "-6em",
                   backgroundColor: "rgba(0,0,0,0.3)",
                 }}
               >
@@ -165,6 +166,7 @@ function ChannelContainer() {
           Follow
         </Button>
       </div>
+      <ChildComponent />
     </div>
   );
 }
