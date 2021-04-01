@@ -30,6 +30,7 @@ const VideoCard = ({
 }) => {
   const classes = useStyles();
   const maxTitleLen = 25;
+  const maxDetailsLen = 90;
   const details = channelName + " | " + views + " views | " + timeAgo;
 
   return (
@@ -51,7 +52,11 @@ const VideoCard = ({
             ? title.substring(0, maxTitleLen) + "..."
             : title
         }
-        subheader={details}
+        subheader={
+          details.length > maxDetailsLen
+            ? details.substring(0, maxDetailsLen) + "..."
+            : details
+        }
       />
       {/* </CardActionArea> */}
     </Card>

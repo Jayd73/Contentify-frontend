@@ -108,7 +108,7 @@ function UserProfile() {
             multiline
             component="pre"
             size="small"
-            name="searchbox"
+            name="about"
             type="text"
             id="about"
             value={userState.channelAbout}
@@ -128,15 +128,6 @@ function UserProfile() {
               ),
             }}
           />
-          <Button
-            style={{ height: "3em", marginTop: "1em" }}
-            variant="contained"
-            color="primary"
-            endIcon={<DoneIcon />}
-            onClick={handleClick}
-          >
-            Done
-          </Button>
           <Popover
             id={id}
             open={open}
@@ -153,6 +144,16 @@ function UserProfile() {
           >
             <Picker onSelect={onEmojiClick} />
           </Popover>
+
+          <Button
+            style={{ height: "3em", marginTop: "1em" }}
+            variant="contained"
+            color="primary"
+            endIcon={<DoneIcon />}
+            onClick={handleClick}
+          >
+            Done
+          </Button>
         </>
       ) : (
         <pre className={classes.textContent}>{userState.channelAbout}</pre>

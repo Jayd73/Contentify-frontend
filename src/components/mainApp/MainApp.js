@@ -6,7 +6,7 @@ function MainApp({ ChildComponent }) {
   return (
     <div>
       <MainAppbar />
-      <div style={{ marginTop: "4.5em" }}>
+      <div style={{ marginTop: "4.2em" }}>
         <ChildComponent />
       </div>
     </div>
