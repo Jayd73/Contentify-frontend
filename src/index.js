@@ -6,6 +6,7 @@ import App from "./App";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { UserContextProvider } from "./contexts/UserContext";
 
 const theme = createMuiTheme({
   palette: {
@@ -24,17 +25,20 @@ const theme = createMuiTheme({
     },
   },
   typography: {
-    fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+    // fontFamily:
+    //   '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+    fontFamily: "'Noto Sans JP', sans-serif",
   },
 });
 
 ReactDOM.render(
   <Router>
     <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
+      <UserContextProvider>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </UserContextProvider>
     </React.StrictMode>
   </Router>,
   document.getElementById("root")

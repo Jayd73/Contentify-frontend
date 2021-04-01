@@ -1,4 +1,5 @@
 import React from "react";
+import { useUserState } from "../../contexts/UserContext";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Popover from "@material-ui/core/Popover";
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
 function ProfilePopover({ anchorEl, setAnchorEl }) {
   const classes = useStyles();
   const history = useHistory();
+  const [userState, setUserState] = useUserState();
+  const maxUnameChars = 18;
+  const maxEmailChars = 23;
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -57,15 +61,19 @@ function ProfilePopover({ anchorEl, setAnchorEl }) {
         <ListItemAvatar>
           <Avatar
             style={{ height: "2.5em", width: "2.5em" }}
-            src="https://cdn.iconscout.com/icon/free/png-512/national-geographic-461820.png"
+            src={userState.userAvatar}
           />
         </ListItemAvatar>
         <ListItemText>
           <Typography variant="h6" style={{ marginLeft: "0.5em" }}>
-            National Geographic
+            {userState.username.length > maxUnameChars
+              ? userState.username.substring(0, maxUnameChars) + "..."
+              : userState.username}
           </Typography>
           <Typography style={{ fontSize: "1em", marginLeft: "0.6em" }}>
-            natgeo@gmail.com
+            {userState.email.length > maxEmailChars
+              ? userState.email.substring(0, maxEmailChars) + "..."
+              : userState.email}
           </Typography>
         </ListItemText>
       </ListItem>

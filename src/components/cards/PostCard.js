@@ -1,5 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useUserState } from "../../contexts/UserContext";
+
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -57,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
 const PostCard = ({ avatarSrc, uname, date, imgSrc, text, loggedInUname }) => {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  const [userState, setUserState] = useUserState();
   const [liked, setLiked] = React.useState(false);
   const [commentCards, setCommentCards] = React.useState([]);
   const [comment, setComment] = React.useState("");
@@ -73,7 +76,8 @@ const PostCard = ({ avatarSrc, uname, date, imgSrc, text, loggedInUname }) => {
     setCommentCards([
       ...commentCards,
       <CommentCard
-        uname={loggedInUname}
+        avatarSrc={userState.userAvatar}
+        uname={userState.username}
         text={comment}
         timeAgo="Few moments"
       />,
@@ -149,7 +153,7 @@ const PostCard = ({ avatarSrc, uname, date, imgSrc, text, loggedInUname }) => {
             Comments
           </Typography>
           <div className={classes.commentBox}>
-            <Avatar />
+            <Avatar src={userState.userAvatar} />
             <TextField
               size="small"
               multiline

@@ -29,6 +29,7 @@ const VideoCard = ({
   channelName,
 }) => {
   const classes = useStyles();
+  const maxTitleLen = 25;
   const details = channelName + " | " + views + " views | " + timeAgo;
 
   return (
@@ -37,13 +38,19 @@ const VideoCard = ({
         <CardMedia className={classes.media} image={imgSrc} title={imgTitle} />
       </CardActionArea>
       <CardHeader
-        avatar={<Avatar src={avatarSrc} />}
+        avatar={
+          <Avatar style={{ height: "2.3em", width: "2.3em" }} src={avatarSrc} />
+        }
         action={
           <IconButton>
             <MoreVertIcon />
           </IconButton>
         }
-        title={title}
+        title={
+          title.length > maxTitleLen
+            ? title.substring(0, maxTitleLen) + "..."
+            : title
+        }
         subheader={details}
       />
       {/* </CardActionArea> */}

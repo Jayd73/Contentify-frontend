@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useUserState } from "../../contexts/UserContext";
 import axiosInstance from "../../axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -16,6 +17,8 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+
+var urljoin = require("url-join");
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -47,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignIn() {
   const classes = useStyles();
   const history = useHistory();
+  const [userState, setUserState] = useUserState();
 
   const initialFormData = Object.freeze({
     username: "",
@@ -86,19 +90,35 @@ export default function SignIn() {
           "JWT " + localStorage.getItem("access_token");
 
         axiosInstance
-          .post(`channel/curruser`, {
-            username: formData.username,
-          })
+          .get(`channel/curruser/`)
           .then((res) => {
-            console.log(res.data);
+            // console.log(res.data);
+
+            setUserState({
+              ...userState,
+              userID: res.data.user.id,
+              username: res.data.user.username,
+              email: res.data.user.email,
+              userAvatar: res.data.avatar.startsWith("http")
+                ? res.data.avatar
+                : urljoin(userState.serverBaseURL, res.data.avatar),
+              channelBanner: res.data.banner.startsWith("http")
+                ? res.data.banner
+                : urljoin(userState.serverBaseURL, res.data.banner),
+              createdAt: res.data.created_date,
+              channelID: res.data.id,
+              channelCreatedDate: res.data.created_date,
+
+              channelAbout: res.data.about,
+              followers: res.data.followers,
+            });
+            // console.log(JSON.stringify(res.data));
           })
           .catch((error) => {
-            console.log("Error from API: ", error.response.data);
+            console.log("Error from API: ", error);
           });
 
         history.push("/videos");
-        //console.log(res);
-        // console.log(res.data);
       })
       .catch((errors) => {
         // console.log("Error when Login: ", errors.response.data);

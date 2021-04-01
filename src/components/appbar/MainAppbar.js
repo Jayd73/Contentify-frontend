@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useUserState } from "../../contexts/UserContext";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -77,6 +78,7 @@ export default function PrimarySearchAppBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [drawerState, setDrawerState] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [userState, setUserState] = useUserState();
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -214,7 +216,7 @@ export default function PrimarySearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <Avatar />
+              <Avatar src={userState.userAvatar} />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

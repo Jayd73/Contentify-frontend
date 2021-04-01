@@ -25,7 +25,7 @@ const VideoContainer = () => {
       <Grid item>
         <VideoCard
           imgSrc="https://i.ytimg.com/vi/hcbfF8I9zCo/maxresdefault.jpg"
-          title="Learn Python completely "
+          title="Learn Python completely Raven more meaninglittle december dirges from the my ominous sad from. Now from the with darkness more a, spoken i the of take minute above tell the tapping. Nothing repeating."
           channelName="Python.Org"
           avatarSrc="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/768px-Python-logo-notext.svg.png"
           views="700k"
