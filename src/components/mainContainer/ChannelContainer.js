@@ -1,16 +1,15 @@
 import React from "react";
 import axiosInstance from "../../axios";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUserState } from "../../contexts/UserContext";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -23,6 +22,7 @@ import UserAvatar from "../miscellaneous/UserAvatar";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import AudiotrackIcon from "@material-ui/icons/Audiotrack";
 import PostAddIcon from "@material-ui/icons/PostAdd";
+import InfoIcon from "@material-ui/icons/Info";
 
 const drawerWidth = 240;
 
@@ -81,31 +81,100 @@ const useStyles = makeStyles((theme) => ({
 function ChannelContainer({ ChildComponent }) {
   const classes = useStyles();
   const history = useHistory();
+  const { channelSlug } = useParams();
   const [userState, setUserState] = useUserState();
-  const [postImage, setPostImage] = useState(null);
-  const editable = true;
+  const [channelData, setChannelData] = useState({});
+  let [userIsFollowing, setUserIsFollowing] = useState();
+
+  useEffect(() => {
+    axiosInstance
+      .get(`channel/${channelSlug}/`)
+      .then((res) => {
+        setChannelData(res.data);
+
+        // console.log("Res: ", isFollowing());
+      })
+      .catch((err) => {
+        console.log("Error while fetching: \n", err.response.data);
+      });
+  }, [setChannelData]);
 
   const channelSection = [
     {
+      name: "About",
+      icon: <InfoIcon />,
+      onClick: () => history.push(`/channel/${channelSlug}`),
+    },
+    {
       name: "Videos",
       icon: <OndemandVideoIcon />,
-      onClick: () => history.push("/channel/cname/videos"),
+      onClick: () => history.push(`/channel/${channelSlug}/videos`),
     },
     {
       name: "Audios",
       icon: <AudiotrackIcon />,
-      onClick: () => history.push("/channel/cname/audios"),
+      onClick: () => history.push(`/channel/${channelSlug}/audios`),
     },
     {
       name: "Posts",
       icon: <PostAddIcon />,
-      onClick: () => history.push("/channel/cname/posts"),
+      onClick: () => history.push(`/channel/${channelSlug}/posts`),
     },
   ];
 
+  function isFollowing() {
+    if (userIsFollowing) {
+      return userIsFollowing;
+    }
+    userIsFollowing =
+      userState.moreChannelData.followedChannels &&
+      userState.moreChannelData.followedChannels.some(
+        (otherChannel) => otherChannel.id === channelData.id
+      );
+    return (
+      userState.moreChannelData.followedChannels &&
+      userState.moreChannelData.followedChannels.some(
+        (otherChannel) => otherChannel.id === channelData.id
+      )
+    );
+  }
+
+  const addFollower = () => {
+    if (userIsFollowing) {
+      axiosInstance
+        .put(`channel/removefollower/${channelData.id}/`)
+        .then((res) => {
+          console.log("Follow data:\n", res.data);
+          setUserState({ ...userState, moreChannelData: res.data });
+          axiosInstance
+            .get(`channel/${channelData.id}/`)
+            .then((res) => {
+              setChannelData(res.data);
+            })
+            .catch((err) => console.log(err));
+          setUserIsFollowing(false);
+        })
+        .catch((err) => console.log("Errors from API: ", err));
+    } else {
+      axiosInstance
+        .put(`channel/addfollower/${channelData.id}/`)
+        .then((res) => {
+          setUserState({ ...userState, moreChannelData: res.data });
+          setChannelData({
+            ...channelData,
+            followers: res.data.followedChannels.filter(
+              (fc) => fc.id === channelData.id
+            )[0].followers,
+          });
+          setUserIsFollowing(true);
+        })
+        .catch((err) => console.log("Errors from API: ", err));
+    }
+  };
+
   const handleChange = (e) => {
     e.preventDefault();
-    if ([e.target.name] == "banner") {
+    if (e.target.name == "banner") {
       // console.log("found banner");
       // console.log("Target files: ", e.target.files);
       if (e.target.files.length == 0) {
@@ -146,15 +215,6 @@ function ChannelContainer({ ChildComponent }) {
           </ListItem>
         ))}
       </List>
-      {/* <Divider />
-      <List>
-        {Object.keys(otherOptions).map((key) => (
-          <ListItem button key={key}>
-            <ListItemIcon>{otherOptions[key]}</ListItemIcon>
-            <ListItemText primary={key} />
-          </ListItem>
-        ))}
-      </List> */}
     </div>
   );
 
@@ -172,8 +232,15 @@ function ChannelContainer({ ChildComponent }) {
         <div className={classes.drawerContainer}>{sideBarContents()}</div>
       </Drawer>
       <div>
-        <img src={userState.channelBanner} className={classes.bannerImg} />
-        {editable ? (
+        <img
+          src={
+            channelData.id === userState.channelID
+              ? userState.channelBanner
+              : channelData.banner
+          }
+          className={classes.bannerImg}
+        />
+        {channelData.id === userState.channelID ? (
           <>
             <input
               accept="image/*"
@@ -206,26 +273,32 @@ function ChannelContainer({ ChildComponent }) {
       </div>
 
       <div className={classes.channelHeader}>
-        <UserAvatar editable />
+        <UserAvatar
+          editable={channelData.id === userState.channelID}
+          channelData={channelData}
+        />
         <div className={classes.nameAndFollowers}>
           <Typography variant="h4" className={classes.userameStyle}>
-            {userState.username}
+            {channelData.user && channelData.user.username}
           </Typography>
           <Typography variant="h6" className={classes.following}>
-            {userState.followers} followers
+            {channelData.followers && channelData.followers} followers
           </Typography>
         </div>
         <div className={classes.grow}></div>
+
         <Button
           style={{ height: "3.5em", marginTop: "2.5em", marginRight: "4em" }}
           variant="contained"
-          color="primary"
+          color={isFollowing() ? "secondary" : "primary"}
           size="large"
+          disabled={channelData.id === userState.channelID}
+          onClick={addFollower}
         >
-          Follow
+          {isFollowing() ? "Unfollow" : "Follow"}
         </Button>
       </div>
-      <ChildComponent />
+      <ChildComponent editable={channelData.id === userState.channelID} />
     </div>
   );
 }

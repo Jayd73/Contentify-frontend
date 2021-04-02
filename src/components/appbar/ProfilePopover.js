@@ -33,7 +33,7 @@ function ProfilePopover({ anchorEl, setAnchorEl }) {
     {
       name: "My Profile",
       icon: <PersonIcon />,
-      onClick: () => history.push("/channel/cname"),
+      onClick: () => history.push(`/channel/${userState.channelSlugName}`),
     },
     {
       name: "Sign out",

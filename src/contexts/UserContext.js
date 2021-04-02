@@ -10,11 +10,13 @@ export const UserContextProvider = (props) => {
     userAvatar: "",
     createdAt: "",
     channelID: "",
+    channelSlugName: "",
     channelCreatedDate: "",
     channelBanner: "",
     channelAbout: "",
     followers: 0,
     serverBaseURL: "http:/127.0.0.1:8000",
+    moreChannelData: {},
   });
 
   useEffect(() => {

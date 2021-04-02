@@ -93,7 +93,6 @@ export default function SignIn() {
           .get(`channel/curruser/`)
           .then((res) => {
             // console.log(res.data);
-
             setUserState({
               ...userState,
               userID: res.data.user.id,
@@ -107,12 +106,13 @@ export default function SignIn() {
                 : urljoin(userState.serverBaseURL, res.data.banner),
               createdAt: res.data.created_date,
               channelID: res.data.id,
+              channelSlugName: res.data.slug,
               channelCreatedDate: res.data.created_date,
 
               channelAbout: res.data.about,
               followers: res.data.followers,
+              moreChannelData: res.data,
             });
-            // console.log(JSON.stringify(res.data));
           })
           .catch((error) => {
             console.log("Error from API: ", error);

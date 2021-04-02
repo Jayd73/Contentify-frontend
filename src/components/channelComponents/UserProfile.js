@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useUserState } from "../../contexts/UserContext";
 import axiosInstance from "../../axios";
 
@@ -40,13 +41,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserProfile() {
+function UserProfile({ editable }) {
   const classes = useStyles();
+  const { channelSlug } = useParams();
   const [userState, setUserState] = useUserState();
   const [isEditingAbout, setIsEditingAbout] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const isLoggedUser = true;
+  const [channelData, setChannelData] = useState({});
+
+  useEffect(() => {
+    axiosInstance.get(`channel/${channelSlug}/`).then((res) => {
+      setChannelData(res.data);
+      // console.log(res.data);
+    });
+  }, []);
+
+  const isLoggedUser = editable;
 
   const open = Boolean(anchorEl);
   const id = open ? "emoji-popover" : undefined;
@@ -56,25 +67,27 @@ function UserProfile() {
   };
 
   const handleChange = (e) => {
-    setUserState({
-      ...userState,
-      channelAbout: e.target.value,
-    });
+    setChannelData({ ...channelData, about: e.target.value });
   };
 
   const onEmojiClick = (emojiObject) => {
-    setUserState({
-      ...userState,
-      channelAbout: userState.channelAbout + emojiObject.native,
+    // setUserState({
+    //   ...userState,
+    //   channelAbout: userState.channelAbout + emojiObject.native,
+    // });
+
+    setChannelData({
+      ...channelData,
+      about: channelData.about + emojiObject.native,
     });
   };
 
   const handleClick = () => {
     if (isEditingAbout) {
-      const aboutText = userState.channelAbout.trim()
-        ? userState.channelAbout
+      const aboutText = channelData.about.trim()
+        ? channelData.about
         : "No description";
-      setUserState({ ...userState, channelAbout: aboutText });
+      setChannelData({ ...channelData, about: aboutText });
       axiosInstance
         .put(`channel/changeabout/${userState.channelID}/`, {
           about: aboutText,
@@ -111,7 +124,7 @@ function UserProfile() {
             name="about"
             type="text"
             id="about"
-            value={userState.channelAbout}
+            value={channelData.about}
             onChange={handleChange}
             style={{ width: "100%" }}
             InputProps={{
@@ -156,10 +169,10 @@ function UserProfile() {
           </Button>
         </>
       ) : (
-        <pre className={classes.textContent}>{userState.channelAbout}</pre>
+        <pre className={classes.textContent}>{channelData.about}</pre>
       )}
       <Typography className={classes.joinedDate}>
-        Joined on {dayjs(userState.createdAt).format("MMMM DD, YYYY")}
+        Joined on {dayjs(channelData.created_date).format("MMMM DD, YYYY")}
       </Typography>
     </div>
   );

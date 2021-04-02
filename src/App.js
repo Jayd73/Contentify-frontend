@@ -52,7 +52,7 @@ function App() {
         />
         <Route
           exact
-          from="/channel/cname"
+          from="/channel/:channelSlug"
           component={() => (
             <MainApp
               ChildComponent={() => (

@@ -38,20 +38,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserAvatar({ editable }) {
+function UserAvatar({ editable, channelData }) {
   const classes = useStyles();
   const [userState, setUserState] = useUserState();
 
   const handleChange = (e) => {
     e.preventDefault();
-    if ([e.target.name] == "avatarImg") {
-      if (e.target.files.length == 0) {
+    if (e.target.name === "avatarImg") {
+      if (e.target.files.length === 0) {
         return;
       }
       const avatar = {
         avatarImg: e.target.files,
       };
-      // console.log("Got", bannerImg);
+      // console.log("Got", avatar);
       // console.log("type: ", typeof bannerImg.banner);
       let formData = new FormData();
       formData.append("avatar", avatar.avatarImg[0]);
@@ -60,7 +60,6 @@ function UserAvatar({ editable }) {
         .then((res) => {
           // console.log(res.data);
           setUserState({ ...userState, userAvatar: res.data.avatar });
-          // console.log("New banner: ", userState.channelBanner);
         })
         .catch((err) => console.log(err));
     }
@@ -99,7 +98,7 @@ function UserAvatar({ editable }) {
           <Avatar src={userState.userAvatar} className={classes.avatarStyle} />
         </Badge>
       ) : (
-        <Avatar src={userState.userAvatar} className={classes.avatarStyle} />
+        <Avatar src={channelData.avatar} className={classes.avatarStyle} />
       )}
     </div>
   );
