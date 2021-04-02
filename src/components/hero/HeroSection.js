@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: 1900,
     height: `${window.innerHeight}px`,
     width: `${window.innerWidth}px`,
+    // border: "1px solid red",
   },
   heroOverlay: {
     background: "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4))",
@@ -28,10 +29,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    // border: "3px solid yellow",
   },
   logo: {
     height: "4em",
-    objectFit: "contain",
   },
 }));
 
@@ -43,13 +44,16 @@ function HeroSection({ HeroContent }) {
     <div className={classes.heroBackground}>
       <div className={classes.heroOverlay}>
         <AppBar
-          style={{ padding: "10px" }}
-          position="static"
+          style={{
+            padding: "10px",
+            justifyContent: "center",
+          }}
+          position="fixed"
           color="transparent"
-          elevation="0"
+          elevation={0}
         >
           <Toolbar>
-            <Grid justify="space-between" container spacing={24}>
+            <Grid justify="space-between" container>
               <Grid item>
                 <img
                   className={classes.logo}
@@ -62,7 +66,7 @@ function HeroSection({ HeroContent }) {
                 <Button
                   variant="contained"
                   color="primary"
-                  style={{ right: "15px" }}
+                  style={{ right: "1.5em", top: "1em" }}
                   onClick={() => history.push("/signin")}
                 >
                   Sign in
@@ -70,6 +74,7 @@ function HeroSection({ HeroContent }) {
                 <Button
                   variant="contained"
                   color="primary"
+                  style={{ top: "1em" }}
                   onClick={() => history.push("/signup")}
                 >
                   Create an account

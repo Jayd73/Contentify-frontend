@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     width: "27.5em",
     height: "11.4em",
+    margin: 4,
   },
   details: {
     display: "flex",

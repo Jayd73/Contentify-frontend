@@ -128,12 +128,14 @@ export default function SignIn() {
       component="main"
       maxWidth="xs"
       style={{
+        margin: 0,
         backgroundColor: "white",
         borderRadius: "20px",
         paddingBottom: "1em",
         paddingTop: "0.5em",
         paddingInline: "2em",
-        marginBottom: "3em",
+        marginTop: "3em",
+        // border: "2px solid green",
       }}
     >
       <CssBaseline />

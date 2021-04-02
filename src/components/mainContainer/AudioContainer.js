@@ -6,7 +6,7 @@ const useStyles = makeStyles({
   gridContainer: {
     boxSizing: "border-box",
     margin: 0,
-    marginLeft: "0.5rem",
+    padding: 0,
   },
 });
 
@@ -178,9 +178,9 @@ const AudioContainer = () => {
   ];
 
   return (
-    <Grid container className={classes.gridContainer} spacing={1}>
+    <Grid container className={classes.gridContainer}>
       {cardData.map((item) => (
-        <Grid item>
+        <Grid item key={item.uid}>
           <AudioCard
             imgSrc={item.imgSrc}
             title={item.title}

@@ -11,7 +11,6 @@ function HeroMessage() {
       style={{
         width: "65%",
         fontSize: "2em",
-        paddingBottom: "3em",
       }}
     >
       <center style={heroFont}>

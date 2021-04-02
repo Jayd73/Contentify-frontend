@@ -61,7 +61,7 @@ const TemporaryDrawer = (props) => {
   const classes = useStyles();
 
   const drawerContents = () => (
-    <div classname={classes.list}>
+    <div className={classes.list}>
       <List>
         <ListSubheader>HOME</ListSubheader>
         {homeSection.map((item) => (

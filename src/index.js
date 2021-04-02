@@ -33,13 +33,11 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
   <Router>
-    <React.StrictMode>
-      <UserContextProvider>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </UserContextProvider>
-    </React.StrictMode>
+    <UserContextProvider>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </UserContextProvider>
   </Router>,
   document.getElementById("root")
 );

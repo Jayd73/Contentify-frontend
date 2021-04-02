@@ -153,7 +153,6 @@ export default function SignIn() {
         paddingBottom: "1em",
         paddingTop: "0.5em",
         paddingInline: "2em",
-        marginBottom: "8em",
       }}
     >
       <CssBaseline />

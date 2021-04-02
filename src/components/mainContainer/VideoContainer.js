@@ -6,14 +6,14 @@ const useStyles = makeStyles({
   gridContainer: {
     boxSizing: "border-box",
     margin: 0,
-    marginLeft: "0.5rem",
+    paddingLeft: 2,
   },
 });
 
 const VideoContainer = () => {
   const classes = useStyles();
   return (
-    <Grid container className={classes.gridContainer} spacing={1}>
+    <Grid container className={classes.gridContainer}>
       <Grid item>
         <VideoCard
           imgSrc="https://miro.medium.com/max/3840/1*yjH3SiDaVWtpBX0g_2q68g.png"
