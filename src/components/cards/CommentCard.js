@@ -11,15 +11,11 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 600,
-    minWidth: 600,
+    width: "100%",
     marginBottom: "0.5em",
+    marginTop: "0.5em",
     boxShadow: "none",
     border: "none",
-  },
-  media: {
-    height: 0,
-    paddingTop: "50%",
   },
   expand: {
     transform: "rotate(0deg)",
@@ -46,13 +42,19 @@ const CommentCard = ({ avatarSrc, uname, timeAgo, text }) => {
   };
 
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card className={classes.root} variant="outlined" raised={false}>
       <CardHeader
+        style={{ marginLeft: "-0.8em" }}
         avatar={<Avatar src={avatarSrc} />}
         title={uname}
         subheader={postingTime}
       />
-      <div style={{ marginLeft: 55 }}>
+      <div
+        style={{
+          marginTop: "-1.3em",
+          marginLeft: "2.7em",
+        }}
+      >
         <CardContent>
           <Typography
             style={{ fontSize: "1em" }}
@@ -64,7 +66,7 @@ const CommentCard = ({ avatarSrc, uname, timeAgo, text }) => {
           </Typography>
         </CardContent>
 
-        <CardActions disableSpacing>
+        <CardActions disableSpacing style={{ marginTop: "-1em" }}>
           <IconButton aria-label="likes" onClick={toggleLike}>
             <ThumbUpIcon color={liked ? "primary" : "inherit"} />
           </IconButton>

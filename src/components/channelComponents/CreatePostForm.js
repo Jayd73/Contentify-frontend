@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   previewImg: {
     width: `${mainWidth}em`,
-    height: "22em",
+    height: "24em",
     objectFit: "contain",
     marginTop: "0.1em",
     marginBottom: "0.5em",
@@ -100,7 +100,9 @@ function CreatePostForm({ setShowForm }) {
     e.preventDefault();
     let formData = new FormData();
     formData.append("content", textContent);
-    formData.append("image", userPostImg);
+    if (userPostImg) {
+      formData.append("image", userPostImg);
+    }
     formData.append("slug", get_currtime_slug());
     axiosInstance.post(`userpost/create/`, formData);
     history.push(`/channel/${userState.moreChannelData.slug}/posts`);
