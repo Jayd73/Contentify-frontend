@@ -12,6 +12,7 @@ import AudioContainer from "./components/mainContainer/AudioContainer";
 import ChannelContainer from "./components/mainContainer/ChannelContainer";
 
 import UserProfile from "./components/channelComponents/UserProfile";
+import UserPosts from "./components/channelComponents/UserPosts";
 
 import { Route, Switch } from "react-router-dom";
 
@@ -57,6 +58,18 @@ function App() {
             <MainApp
               ChildComponent={() => (
                 <ChannelContainer ChildComponent={UserProfile} />
+              )}
+            />
+          )}
+        />
+
+        <Route
+          exact
+          from="/channel/:channelSlug/posts"
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserPosts} />
               )}
             />
           )}

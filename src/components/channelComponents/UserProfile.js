@@ -8,15 +8,17 @@ import axiosInstance from "../../axios";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Icon, Typography } from "@material-ui/core";
 
 import InputAdornment from "@material-ui/core/InputAdornment";
 import InsertEmoticonOutlinedIcon from "@material-ui/icons/InsertEmoticonOutlined";
 import DoneIcon from "@material-ui/icons/Done";
-import Popover from "@material-ui/core/Popover";
 
-import "emoji-mart/css/emoji-mart.css";
-import { Picker } from "emoji-mart";
+// import Popover from "@material-ui/core/Popover";
+// import "emoji-mart/css/emoji-mart.css";
+// import { Emoji, Picker } from "emoji-mart";
+
+import EmojiTextField from "../customizedComponents/EmojiTextField";
 
 let dayjs = require("dayjs");
 
@@ -38,6 +40,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2em",
     fontWeight: "bold",
     fontSize: "1.2em",
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
@@ -70,17 +74,17 @@ function UserProfile({ editable }) {
     setChannelData({ ...channelData, about: e.target.value });
   };
 
-  const onEmojiClick = (emojiObject) => {
-    // setUserState({
-    //   ...userState,
-    //   channelAbout: userState.channelAbout + emojiObject.native,
-    // });
+  // const onEmojiClick = (emojiObject) => {
+  //   // setUserState({
+  //   //   ...userState,
+  //   //   channelAbout: userState.channelAbout + emojiObject.native,
+  //   // });
 
-    setChannelData({
-      ...channelData,
-      about: channelData.about + emojiObject.native,
-    });
-  };
+  //   setChannelData({
+  //     ...channelData,
+  //     about: channelData.about + emojiObject.native,
+  //   });
+  // };
 
   const handleClick = () => {
     if (isEditingAbout) {
@@ -116,7 +120,7 @@ function UserProfile({ editable }) {
       </div>
       {isEditingAbout ? (
         <>
-          <TextField
+          <EmojiTextField
             variant="outlined"
             multiline
             component="pre"
@@ -141,7 +145,7 @@ function UserProfile({ editable }) {
               ),
             }}
           />
-          <Popover
+          {/* <Popover
             id={id}
             open={open}
             anchorEl={anchorEl}
@@ -156,7 +160,7 @@ function UserProfile({ editable }) {
             }}
           >
             <Picker onSelect={onEmojiClick} />
-          </Popover>
+          </Popover> */}
 
           <Button
             style={{ height: "3em", marginTop: "1em" }}
@@ -172,7 +176,8 @@ function UserProfile({ editable }) {
         <pre className={classes.textContent}>{channelData.about}</pre>
       )}
       <Typography className={classes.joinedDate}>
-        Joined on {dayjs(channelData.created_date).format("MMMM DD, YYYY")}
+        <Icon>date_range</Icon> &nbsp; Joined on{" "}
+        {dayjs(channelData.created_date).format("MMMM DD, YYYY")}
       </Typography>
     </div>
   );

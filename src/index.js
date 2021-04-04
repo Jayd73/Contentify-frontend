@@ -20,8 +20,9 @@ const theme = createMuiTheme({
     },
     appBg: {
       light: "#fafafa",
-      dark: "#ededed",
-      darker: "#666666",
+      dark: "#f2f2f2",
+      darker: "#ebebeb",
+      darkest: "#666666",
     },
   },
   typography: {

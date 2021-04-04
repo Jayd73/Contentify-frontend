@@ -12,22 +12,13 @@ import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 
 function EmojiTextField(props) {
-  const { initialText, onChangeCallback } = props;
+  let valueText = props.value ? props.value : "";
+  const onChangeCallback = props.onChange;
+  const textInpRef = React.useRef();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [text, setText] = React.useState(initialText);
+  const [text, setText] = React.useState(valueText);
   const open = Boolean(anchorEl);
   const id = open ? "emoji-popover" : undefined;
-  let filteredProps = {};
-
-  useEffect(() => {
-    console.log(props);
-    for (let prop in props) {
-      if (prop != "initialText" && prop != "onChangeCallback") {
-        filteredProps[prop] = props[prop];
-      }
-    }
-    console.log("Filtered: ", filteredProps);
-  }, []);
 
   const handleEmojiPopover = (e) => {
     setAnchorEl(anchorEl ? null : e.currentTarget);
@@ -42,14 +33,19 @@ function EmojiTextField(props) {
 
   const onEmojiClick = (emojiObject) => {
     setText(text + emojiObject.native);
+    if (onChangeCallback) {
+      const e = { target: { value: text + emojiObject.native } };
+      onChangeCallback(e, setText);
+    }
   };
 
   return (
     <>
       <TextField
-        {...filteredProps}
+        {...props}
         onChange={handleChange}
         value={text}
+        inputRef={textInpRef}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

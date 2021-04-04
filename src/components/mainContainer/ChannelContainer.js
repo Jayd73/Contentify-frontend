@@ -21,8 +21,8 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import UserAvatar from "../miscellaneous/UserAvatar";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import AudiotrackIcon from "@material-ui/icons/Audiotrack";
-import PostAddIcon from "@material-ui/icons/PostAdd";
 import InfoIcon from "@material-ui/icons/Info";
+import Icon from "@material-ui/core/Icon";
 
 const drawerWidth = 240;
 
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
   following: {
     fontWeight: "bold",
-    color: theme.palette.appBg.darker,
+    color: theme.palette.appBg.darkest,
   },
   nameAndFollowers: {
     marginTop: "1.5em",
@@ -117,7 +117,7 @@ function ChannelContainer({ ChildComponent }) {
     },
     {
       name: "Posts",
-      icon: <PostAddIcon />,
+      icon: <Icon>article</Icon>,
       onClick: () => history.push(`/channel/${channelSlug}/posts`),
     },
   ];
@@ -144,7 +144,7 @@ function ChannelContainer({ ChildComponent }) {
       axiosInstance
         .put(`channel/removefollower/${channelData.id}/`)
         .then((res) => {
-          console.log("Follow data:\n", res.data);
+          // console.log("Follow data:\n", res.data);
           setUserState({ ...userState, moreChannelData: res.data });
           axiosInstance
             .get(`channel/${channelData.id}/`)

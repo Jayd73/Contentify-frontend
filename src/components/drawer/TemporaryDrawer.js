@@ -12,9 +12,9 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import AudiotrackIcon from "@material-ui/icons/Audiotrack";
 import PlaylistPlayIcon from "@material-ui/icons/PlaylistPlay";
-import PostAddIcon from "@material-ui/icons/PostAdd";
 import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import { withRouter } from "react-router-dom";
+import Icon from "@material-ui/core/Icon";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -49,7 +49,7 @@ const TemporaryDrawer = (props) => {
     },
     {
       name: "Posts",
-      icon: <PostAddIcon />,
+      icon: <Icon>article</Icon>,
       onClick: () => history.push("/posts"),
     },
   ];
