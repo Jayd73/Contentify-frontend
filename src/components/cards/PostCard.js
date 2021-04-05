@@ -69,6 +69,11 @@ const useStyles = makeStyles((theme) => ({
     width: "23em",
     marginInline: 15,
   },
+  postText: {
+    fontSize: "1.2em",
+    color: theme.palette.appBg.darkest,
+    marginTop: "-0.5em",
+  },
 }));
 
 const PostCard = ({
@@ -228,7 +233,7 @@ const PostCard = ({
           {text ? (
             <CardContent>
               <Typography
-                style={{ fontSize: "1.2em" }}
+                className={classes.postText}
                 variant="body2"
                 color="textSecondary"
                 component="p"

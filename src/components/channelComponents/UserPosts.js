@@ -1,33 +1,19 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Button, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { Typography } from "@material-ui/core";
 import CreatePostForm from "./CreatePostForm";
 import { Create } from "@material-ui/icons";
 import PostContainer from "../mainContainer/PostContainer";
 import axiosInstance from "../../axios";
 import { useUserState } from "../../contexts/UserContext";
 
+import SectionTitle from "../customizedComponents/SectionTitle";
+
 const useStyles = makeStyles((theme) => ({
-  heading: {
-    display: "flex",
-    zIndex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
-    color: theme.palette.secondary.dark,
-    position: "sticky",
-    top: theme.mixins.toolbar.minHeight,
-    fontSize: "1em",
-    fontWeight: "bold",
-    padding: "1em",
-    paddingLeft: "2em",
-    borderTop: `2px solid ${theme.palette.appBg.darkest}`,
-    borderBottom: `2px solid ${theme.palette.appBg.darkest}`,
-    backgroundColor: theme.palette.appBg.darker,
-  },
   postsContainer: {
     margin: 0,
-    marginTop: "1.5em",
+    marginTop: "1em",
     height: window.innerHeight - 140,
     overflowY: "scroll",
     // border: "2px solid blue",
@@ -41,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserPosts({ editable }) {
-  const theme = useTheme();
   const classes = useStyles();
   const [userState, setUserState] = useUserState();
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
@@ -49,16 +34,6 @@ function UserPosts({ editable }) {
     loading: true,
     userPosts: null,
   });
-
-  const headingRef = React.useRef(null);
-
-  useEffect(() => {
-    window.scrollTo(
-      0,
-      headingRef.current.getBoundingClientRect().top -
-        theme.mixins.toolbar.minHeight
-    );
-  }, []);
 
   useEffect(() => {
     if (userState.moreChannelData.id) {
@@ -86,23 +61,15 @@ function UserPosts({ editable }) {
 
   return (
     <div>
-      <div ref={headingRef} className={classes.heading}>
-        <h1>Posts 📃 </h1>
-        {editable ? (
-          <Button
-            style={{ height: "3em", marginRight: "2em" }}
-            variant="contained"
-            color="primary"
-            endIcon={<Create />}
-            disabled={showCreatePostForm}
-            onClick={() => setShowCreatePostForm(true)}
-          >
-            Create new
-          </Button>
-        ) : (
-          ""
-        )}
-      </div>
+      <SectionTitle
+        title={"Posts 📃"}
+        btnText={"Create New"}
+        EndIcon={Create}
+        showCreatePostForm={showCreatePostForm}
+        setShowCreatePostForm={setShowCreatePostForm}
+        canEdit={editable}
+      />
+
       <div className={classes.postsContainer}>
         {showCreatePostForm ? (
           <CreatePostForm setShowForm={setShowCreatePostForm} />

@@ -3,6 +3,7 @@ import PostCard from "../cards/PostCard";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUserState } from "../../contexts/UserContext";
 import { Typography } from "@material-ui/core";
+import { withRouter } from "react-router-dom";
 
 let dayjs = require("dayjs");
 
@@ -21,19 +22,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PostContainer = ({ userPosts }) => {
+const PostContainer = (props) => {
+  const allPosts = props.location && props.location.state;
+  const userPosts = props.userPosts;
   const classes = useStyles();
   const [userState, setUserState] = useUserState();
   const [deletedPosts, setDeletedPosts] = React.useState(0);
 
-  const userPostsCards = () =>
-    userPosts.map((userPost) => (
+  // React.useEffect(() => {
+  //   console.log("Recieved all\n: ", allPosts);
+  //   console.log("Recieved user: ", userPosts);
+  // }, []);
+
+  const userPostsCards = (postsList) =>
+    postsList.map((userPost) => (
       <PostCard
         key={userPost.id}
         avatarSrc={userPost.channel.avatar}
         imgSrc={userPost.image}
         uname={userPost.channel.user.username}
-        date={dayjs(userPost.published).format("MMMM DD, YYYY")}
+        date={dayjs(userPost.published).format("hh:mm a, MMMM DD, YYYY")}
         text={userPost.content}
         isLoggedInUser={userState.moreChannelData.id == userPost.channel.id}
         userPostID={userPost.id}
@@ -42,10 +50,13 @@ const PostContainer = ({ userPosts }) => {
       />
     ));
 
+  if (allPosts) {
+    return <div className={classes.container}>{userPostsCards(allPosts)}</div>;
+  }
   return (
     <div className={classes.container}>
       {userPosts && userPosts.length > 0 && deletedPosts != userPosts.length ? (
-        userPostsCards()
+        userPostsCards(userPosts)
       ) : (
         <Typography className={classes.message}>
           There are no posts on this channel
@@ -88,4 +99,4 @@ const PostContainer = ({ userPosts }) => {
   );
 };
 
-export default PostContainer;
+export default withRouter(PostContainer);

@@ -36,6 +36,17 @@ const useStyles = makeStyles((theme) => ({
   moreOptIcon: {
     position: "absolute",
   },
+  durationStyle: {
+    backgroundColor: "black",
+    height: "1.5em",
+    color: "white",
+    display: "inline-block",
+    float: "right",
+    paddingInline: "0.3em",
+    marginTop: "9.6em",
+    marginLeft: "-2.6em",
+    opacity: 0.8,
+  },
 }));
 
 function AudioCard({
@@ -46,6 +57,7 @@ function AudioCard({
   uploadTime,
   channelName,
   creatorName,
+  duration,
 }) {
   const classes = useStyles();
   const maxTitleLen = 53;
@@ -57,6 +69,11 @@ function AudioCard({
   return (
     <Card className={classes.root}>
       <CardMedia component="img" className={classes.cover} image={imgSrc} />
+      <div className={classes.durationStyle}>
+        <Typography style={{ fontSize: "0.9em" }}>
+          {duration ? duration : "5:00"}
+        </Typography>
+      </div>
 
       <div className={classes.details}>
         <CardHeader

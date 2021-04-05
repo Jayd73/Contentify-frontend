@@ -173,7 +173,16 @@ function UserProfile({ editable }) {
           </Button>
         </>
       ) : (
-        <pre className={classes.textContent}>{channelData.about}</pre>
+        <pre
+          style={{
+            width: "100%",
+            border: "1px green blue",
+            whiteSpace: "pre-wrap",
+          }}
+          className={classes.textContent}
+        >
+          {channelData.about}
+        </pre>
       )}
       <Typography className={classes.joinedDate}>
         <Icon>date_range</Icon> &nbsp; Joined on{" "}

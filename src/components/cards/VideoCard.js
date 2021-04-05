@@ -7,6 +7,7 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,6 +20,16 @@ const useStyles = makeStyles((theme) => ({
     height: 0,
     paddingTop: "56.25%", // 16:9
   },
+  durationStyle: {
+    backgroundColor: "black",
+    color: "white",
+    display: "inline-block",
+    float: "right",
+    paddingInline: "0.5em",
+    marginTop: "-1.8em",
+    marginRight: "0.4em",
+    opacity: 0.8,
+  },
 }));
 
 const VideoCard = ({
@@ -29,6 +40,7 @@ const VideoCard = ({
   views,
   timeAgo,
   channelName,
+  duration,
 }) => {
   const classes = useStyles();
   const maxTitleLen = 25;
@@ -39,6 +51,11 @@ const VideoCard = ({
     <Card className={classes.root}>
       <CardActionArea>
         <CardMedia className={classes.media} image={imgSrc} title={imgTitle} />
+        <div className={classes.durationStyle}>
+          <Typography style={{ fontSize: "1em" }}>
+            {duration ? duration : "10:00"}
+          </Typography>
+        </div>
       </CardActionArea>
       <CardHeader
         avatar={

@@ -1,5 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import axiosInstance from "../../axios";
 
 import Drawer from "@material-ui/core/Drawer";
 import Divider from "@material-ui/core/Divider";
@@ -50,7 +51,17 @@ const TemporaryDrawer = (props) => {
     {
       name: "Posts",
       icon: <Icon>article</Icon>,
-      onClick: () => history.push("/posts"),
+      onClick: () => {
+        axiosInstance
+          .get(`userpost/`)
+          .then((res) => {
+            const allPosts = res.data;
+            history.push({ pathname: "/posts", state: allPosts });
+          })
+          .catch((err) => {
+            console.log("Error from API: ", err);
+          });
+      },
     },
   ];
 

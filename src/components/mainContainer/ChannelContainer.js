@@ -95,7 +95,7 @@ function ChannelContainer({ ChildComponent }) {
         // console.log("Res: ", isFollowing());
       })
       .catch((err) => {
-        console.log("Error while fetching: \n", err.response.data);
+        console.log("Error while fetching: \n", err);
       });
   }, [setChannelData]);
 
