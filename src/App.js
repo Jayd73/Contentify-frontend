@@ -98,6 +98,17 @@ function App() {
             />
           )}
         />
+        <Route
+          exact
+          from="/channel/:channelSlug/posts/:userPostSlug"
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserPosts} />
+              )}
+            />
+          )}
+        />
       </Switch>
     </>
   );

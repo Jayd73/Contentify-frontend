@@ -12,20 +12,20 @@ import SectionTitle from "../customizedComponents/SectionTitle";
 const useStyles = makeStyles((theme) => ({
   postsContainer: {
     margin: 0,
-    marginTop: "1em",
-    height: window.innerHeight - 140,
+    marginTop: "0.4em",
+    height: window.innerHeight - 145,
     overflowY: "scroll",
     // border: "2px solid blue",
   },
   loadingStyle: {
     textAlign: "center",
     margin: "2em",
-    color: theme.palette.secondary,
+    color: theme.palette.secondary.main,
     fontWeight: "bold",
   },
 }));
 
-function UserPosts({ currChannelID, editable }) {
+function UserPosts({ userPostSlug, currChannelID, editable }) {
   const classes = useStyles();
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
   const [appState, setAppState] = useState({
@@ -48,8 +48,23 @@ function UserPosts({ currChannelID, editable }) {
     }
   }, [setAppState, currChannelID]);
 
+  useEffect(() => {
+    if (userPostSlug) {
+      axiosInstance
+        .get(`userpost/${userPostSlug}/`)
+        .then((res) => {
+          const singleUserPost = res.data;
+          setAppState({ loading: false, userPosts: [singleUserPost] });
+          // console.log("Got posts data: ", res.data);
+        })
+        .catch((err) => {
+          console.log("Error from API: ", err);
+        });
+    }
+  }, [userPostSlug]);
+
   const showPosts = () =>
-    appState.loading && showCreatePostForm ? (
+    appState.loading ? (
       <Typography variant="h3" className={classes.loadingStyle}>
         Loading Posts...
       </Typography>
@@ -63,8 +78,8 @@ function UserPosts({ currChannelID, editable }) {
         title={"Posts 📃"}
         btnText={"Create New"}
         EndIcon={Create}
-        showCreatePostForm={showCreatePostForm}
-        setShowCreatePostForm={setShowCreatePostForm}
+        showForm={showCreatePostForm}
+        setShowForm={setShowCreatePostForm}
         canEdit={editable}
       />
 

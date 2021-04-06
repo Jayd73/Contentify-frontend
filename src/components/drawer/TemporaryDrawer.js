@@ -19,7 +19,7 @@ import Icon from "@material-ui/core/Icon";
 
 const useStyles = makeStyles((theme) => ({
   list: {
-    width: 650,
+    width: 200,
   },
   paper: {
     // backgroundColor: "#0c1729",

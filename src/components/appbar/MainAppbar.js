@@ -187,6 +187,7 @@ export default function PrimarySearchAppBar() {
             type="text"
             id="searchbox"
             className="searchbox"
+            style={{ marginRight: "6em" }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">

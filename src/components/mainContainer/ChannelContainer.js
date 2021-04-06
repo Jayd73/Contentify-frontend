@@ -58,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-4px",
     paddingBottom: "0.5em",
     display: "flex",
-    backgroundColor: theme.palette.appBg.darker,
-    borderBottom: `1px solid ${theme.palette.appBg.darkest}`,
+    backgroundColor: theme.palette.appBg.dark,
+    // borderTop: `2px solid ${theme.palette.appBg.darkest}`,
+    borderBottom: `2px solid ${theme.palette.appBg.darkest}`,
   },
   userameStyle: {
     fontFamily: theme.typography.fontFamily,
@@ -84,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
 function ChannelContainer({ ChildComponent }) {
   const classes = useStyles();
   const history = useHistory();
-  const { channelSlug } = useParams();
+  const { channelSlug, userPostSlug } = useParams();
   const [userState, setUserState] = useUserState();
   const [channelData, setChannelData] = useState({});
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -310,7 +311,8 @@ function ChannelContainer({ ChildComponent }) {
         </Button>
       </div>
       <ChildComponent
-        currChannelID={channelData.id}
+        currChannelID={!userPostSlug && channelData.id}
+        userPostSlug={userPostSlug}
         editable={channelData.id === userState.channelID}
       />
       <Snackbar

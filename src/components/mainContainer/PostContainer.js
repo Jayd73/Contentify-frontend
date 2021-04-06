@@ -39,20 +39,25 @@ const PostContainer = (props) => {
       <PostCard
         key={userPost.id}
         avatarSrc={userPost.channel.avatar}
-        channelSlug={userPost.channel.slug}
         imgSrc={userPost.image}
         uname={userPost.channel.user.username}
         date={dayjs(userPost.published).format("hh:mm a, MMMM DD, YYYY")}
         text={userPost.content}
         isLoggedInUser={userState.moreChannelData.id == userPost.channel.id}
         userPostID={userPost.id}
+        userPostChannelSlug={userPost.channel.slug}
+        userPostSlug={userPost.slug}
         deletedPosts={deletedPosts}
         setDeletedPosts={setDeletedPosts}
       />
     ));
 
   if (allPosts) {
-    return <div className={classes.container}>{userPostsCards(allPosts)}</div>;
+    return (
+      <div style={{ marginTop: "4.5em" }} className={classes.container}>
+        {userPostsCards(allPosts)}
+      </div>
+    );
   }
   return (
     <div className={classes.container}>

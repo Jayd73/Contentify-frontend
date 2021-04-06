@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     padding: "1em",
     paddingLeft: "2em",
-    borderTop: `2px solid ${theme.palette.appBg.darkest}`,
     borderBottom: `2px solid ${theme.palette.appBg.darkest}`,
     backgroundColor: theme.palette.appBg.darker,
   },
@@ -25,8 +24,8 @@ function SectionTitle({
   title,
   btnText,
   EndIcon,
-  showCreatePostForm,
-  setShowCreatePostForm,
+  showForm,
+  setShowForm,
   canEdit,
 }) {
   const headingRef = React.useRef(null);
@@ -50,8 +49,8 @@ function SectionTitle({
           variant="contained"
           color="primary"
           endIcon={<EndIcon />}
-          disabled={showCreatePostForm}
-          onClick={() => setShowCreatePostForm(true)}
+          disabled={showForm}
+          onClick={() => setShowForm(true)}
         >
           {btnText}
         </Button>

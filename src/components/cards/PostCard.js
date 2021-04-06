@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUserState } from "../../contexts/UserContext";
 import { useHistory } from "react-router-dom";
@@ -34,6 +35,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import ButtonBase from "@material-ui/core/ButtonBase";
 
+import ShareLinkDialog from "../customizedComponents/ShareLinkDialog";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: 550,
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     // paddingTop: "80%",
-    height: "25em",
+    height: "27em",
     objectFit: "contain",
     backgroundColor: "black",
   },
@@ -78,7 +81,6 @@ const useStyles = makeStyles((theme) => ({
 
 const PostCard = ({
   avatarSrc,
-  channelSlug,
   uname,
   date,
   imgSrc,
@@ -87,17 +89,21 @@ const PostCard = ({
   userPostID,
   deletedPosts,
   setDeletedPosts,
+  userPostChannelSlug,
+  userPostSlug,
 }) => {
   const classes = useStyles();
   const history = useHistory();
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [userState, setUserState] = useUserState();
-  const [liked, setLiked] = React.useState(false);
-  const [commentCards, setCommentCards] = React.useState([]);
-  const [comment, setComment] = React.useState("");
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [showComponent, setShowComponent] = React.useState(true);
-  const [openConfDialog, setOpenConfDialog] = React.useState(false);
+  const [liked, setLiked] = useState(false);
+  const [commentCards, setCommentCards] = useState([]);
+  const [comment, setComment] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [showComponent, setShowComponent] = useState(true);
+  const [openConfDialog, setOpenConfDialog] = useState(false);
+  const [openShareDialog, setOpenShareDialog] = useState(false);
+  let postLinkAddress = `${window.location.host}/channel/${userPostChannelSlug}/posts/${userPostSlug}`;
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -166,6 +172,10 @@ const PostCard = ({
     setOpenConfDialog(false);
   };
 
+  const handleShare = () => {
+    setOpenShareDialog(true);
+  };
+
   return (
     <>
       {showComponent ? (
@@ -219,7 +229,9 @@ const PostCard = ({
                 <Avatar
                   style={{ width: "2.5em", height: "2.5em" }}
                   src={avatarSrc}
-                  onClick={() => history.push(`/channel/${channelSlug}`)}
+                  onClick={() =>
+                    history.push(`/channel/${userPostChannelSlug}`)
+                  }
                 />
               </ButtonBase>
             }
@@ -263,7 +275,7 @@ const PostCard = ({
             >
               <CommentIcon />
             </IconButton>
-            <IconButton aria-label="share">
+            <IconButton aria-label="share" onClick={handleShare}>
               <ShareIcon />
             </IconButton>
             <IconButton
@@ -276,6 +288,11 @@ const PostCard = ({
             >
               <ExpandMoreIcon />
             </IconButton>
+            <ShareLinkDialog
+              open={openShareDialog}
+              setOpen={setOpenShareDialog}
+              linkAddress={postLinkAddress}
+            />
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent className={classes.comment}>
@@ -306,11 +323,6 @@ const PostCard = ({
                   POST
                 </Button>
               </div>
-              {/* <CommentCard
-          uname="John Kepler"
-          timeAgo="3 minutes"
-          text="I am ready to start learning !"
-        /> */}
               <CommentCard
                 uname="Nathan Evans"
                 timeAgo="10 days"

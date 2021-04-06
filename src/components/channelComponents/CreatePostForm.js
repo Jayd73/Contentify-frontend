@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
 
 function CreatePostForm({ setShowForm }) {
   const classes = useStyles();
-  const [userState, setUserState] = useUserState();
   const history = useHistory();
+  const [userState, setUserState] = useUserState();
   const [imgURL, setImgURL] = React.useState();
   const [remainingChars, setRemainingChars] = React.useState(maxChars);
   const [textContent, setTextContent] = React.useState("");
@@ -170,7 +170,6 @@ function CreatePostForm({ setShowForm }) {
                 // border: "3px solid blue",
               }}
             >
-              {/* <div style={{ width: "0em" }}></div> */}
               <Button
                 className={classes.btnStyle}
                 variant="contained"

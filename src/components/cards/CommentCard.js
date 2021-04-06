@@ -12,8 +12,8 @@ import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
-    marginBottom: "0.5em",
-    marginTop: "0.5em",
+    marginBottom: "0.2em",
+    marginTop: "0.2em",
     boxShadow: "none",
     border: "none",
   },
