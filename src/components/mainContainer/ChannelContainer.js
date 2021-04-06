@@ -24,6 +24,8 @@ import AudiotrackIcon from "@material-ui/icons/Audiotrack";
 import InfoIcon from "@material-ui/icons/Info";
 import Icon from "@material-ui/core/Icon";
 
+import Snackbar from "@material-ui/core/Snackbar";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -56,7 +58,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "-4px",
     paddingBottom: "0.5em",
     display: "flex",
-    backgroundColor: theme.palette.appBg.dark,
+    backgroundColor: theme.palette.appBg.darker,
+    borderBottom: `1px solid ${theme.palette.appBg.darkest}`,
   },
   userameStyle: {
     fontFamily: theme.typography.fontFamily,
@@ -84,6 +87,9 @@ function ChannelContainer({ ChildComponent }) {
   const { channelSlug } = useParams();
   const [userState, setUserState] = useUserState();
   const [channelData, setChannelData] = useState({});
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState(false);
+
   let [userIsFollowing, setUserIsFollowing] = useState();
 
   useEffect(() => {
@@ -97,6 +103,11 @@ function ChannelContainer({ ChildComponent }) {
       .catch((err) => {
         console.log("Error while fetching: \n", err);
       });
+    setUserState({
+      ...userState,
+      setSnackbarOpen: setOpenSnackbar,
+      setSnackbarMsg: setSnackbarMsg,
+    });
   }, [setChannelData]);
 
   const channelSection = [
@@ -298,7 +309,20 @@ function ChannelContainer({ ChildComponent }) {
           {isFollowing() ? "Unfollow" : "Follow"}
         </Button>
       </div>
-      <ChildComponent editable={channelData.id === userState.channelID} />
+      <ChildComponent
+        currChannelID={channelData.id}
+        editable={channelData.id === userState.channelID}
+      />
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMsg}
+      />
     </div>
   );
 }

@@ -16,6 +16,8 @@ export const UserContextProvider = (props) => {
     channelAbout: "",
     followers: 0,
     serverBaseURL: "http:/127.0.0.1:8000",
+    setSnackbarOpen: "",
+    setSnackbarMsg: "",
     moreChannelData: {},
   });
 

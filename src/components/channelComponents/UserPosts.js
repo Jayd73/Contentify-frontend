@@ -6,7 +6,6 @@ import CreatePostForm from "./CreatePostForm";
 import { Create } from "@material-ui/icons";
 import PostContainer from "../mainContainer/PostContainer";
 import axiosInstance from "../../axios";
-import { useUserState } from "../../contexts/UserContext";
 
 import SectionTitle from "../customizedComponents/SectionTitle";
 
@@ -26,9 +25,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserPosts({ editable }) {
+function UserPosts({ currChannelID, editable }) {
   const classes = useStyles();
-  const [userState, setUserState] = useUserState();
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
   const [appState, setAppState] = useState({
     loading: true,
@@ -36,9 +34,9 @@ function UserPosts({ editable }) {
   });
 
   useEffect(() => {
-    if (userState.moreChannelData.id) {
+    if (currChannelID) {
       axiosInstance
-        .get(`userpost/channel/${userState.moreChannelData.id}/`)
+        .get(`userpost/channel/${currChannelID}/`)
         .then((res) => {
           const allPosts = res.data;
           setAppState({ loading: false, userPosts: allPosts });
@@ -48,7 +46,7 @@ function UserPosts({ editable }) {
           console.log("Error from API: ", err);
         });
     }
-  }, [setAppState]);
+  }, [setAppState, currChannelID]);
 
   const showPosts = () =>
     appState.loading && showCreatePostForm ? (

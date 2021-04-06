@@ -39,6 +39,7 @@ const PostContainer = (props) => {
       <PostCard
         key={userPost.id}
         avatarSrc={userPost.channel.avatar}
+        channelSlug={userPost.channel.slug}
         imgSrc={userPost.image}
         uname={userPost.channel.user.username}
         date={dayjs(userPost.published).format("hh:mm a, MMMM DD, YYYY")}

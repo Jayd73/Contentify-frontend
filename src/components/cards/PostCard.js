@@ -1,6 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUserState } from "../../contexts/UserContext";
+import { useHistory } from "react-router-dom";
 import axiosInstance from "../../axios";
 
 import clsx from "clsx";
@@ -30,9 +31,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import ButtonBase from "@material-ui/core/ButtonBase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 
 const PostCard = ({
   avatarSrc,
+  channelSlug,
   uname,
   date,
   imgSrc,
@@ -88,6 +89,7 @@ const PostCard = ({
   setDeletedPosts,
 }) => {
   const classes = useStyles();
+  const history = useHistory();
   const [expanded, setExpanded] = React.useState(false);
   const [userState, setUserState] = useUserState();
   const [liked, setLiked] = React.useState(false);
@@ -96,7 +98,6 @@ const PostCard = ({
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [showComponent, setShowComponent] = React.useState(true);
   const [openConfDialog, setOpenConfDialog] = React.useState(false);
-  const [deleteConf, setDeleteConf] = React.useState(false);
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -156,6 +157,8 @@ const PostCard = ({
         console.log("Error while deleting: ", err);
       });
     setDeletedPosts(deletedPosts + 1);
+    userState.setSnackbarMsg("Post deleted successfully");
+    userState.setSnackbarOpen(true);
   };
 
   const handleAlertClose = () => {
@@ -200,12 +203,6 @@ const PostCard = ({
             <DialogTitle>
               {"Are you sure you want to delete this post?"}
             </DialogTitle>
-            {/* <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending anonymous location data to
-            Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent> */}
             <DialogActions>
               <Button onClick={handleAlertClose} color="primary" autoFocus>
                 Cancel
@@ -215,12 +212,16 @@ const PostCard = ({
               </Button>
             </DialogActions>
           </Dialog>
+
           <CardHeader
             avatar={
-              <Avatar
-                style={{ width: "2.5em", height: "2.5em" }}
-                src={avatarSrc}
-              />
+              <ButtonBase centerRipple>
+                <Avatar
+                  style={{ width: "2.5em", height: "2.5em" }}
+                  src={avatarSrc}
+                  onClick={() => history.push(`/channel/${channelSlug}`)}
+                />
+              </ButtonBase>
             }
             action={
               <IconButton onClick={handleMenuClick}>
