@@ -25,13 +25,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function UserVideos({ editable }) {
+function UserVideos({ editable, currChannelID }) {
   const classes = useStyles();
   const [showAddVideoForm, setShowAddVideoForm] = useState(false);
   const [appState, setAppState] = useState({
     loading: true,
-    userPosts: null,
+    videos: null,
   });
+
+  useEffect(() => {
+    if (currChannelID) {
+      axiosInstance
+        .get(`video/channel/${currChannelID}/`)
+        .then((res) => {
+          setAppState({ loading: false, videos: res.data });
+          console.log("Got posts data: ", res.data);
+        })
+        .catch((err) => {
+          console.log("Error from API: ", err);
+        });
+    }
+  }, [setAppState, currChannelID]);
 
   const showVideos = () =>
     appState.loading ? (
@@ -39,7 +53,7 @@ function UserVideos({ editable }) {
         Loading Videos...
       </Typography>
     ) : (
-      <VideoContainer userPosts={appState.userPosts} />
+      <VideoContainer videos={appState.videos} />
     );
 
   return (
@@ -56,7 +70,7 @@ function UserVideos({ editable }) {
       <div className={classes.videoContainer}>
         {showAddVideoForm ? (
           <UploadMultimediaForm
-            type={"viceo"}
+            type={"video"}
             setShowForm={setShowAddVideoForm}
           />
         ) : (

@@ -1,20 +1,95 @@
 import { Grid, makeStyles } from "@material-ui/core";
 import React from "react";
 import VideoCard from "../cards/VideoCard";
+import { useUserState } from "../../contexts/UserContext";
+import { withRouter } from "react-router-dom";
+import { Typography } from "@material-ui/core";
 
-const useStyles = makeStyles({
+import {
+  abbreviateNumber,
+  getTimeFromSecs,
+} from "../miscellaneous/HelperFunctions";
+
+let dayjs = require("dayjs");
+var relativeTime = require("dayjs/plugin/relativeTime");
+dayjs.extend(relativeTime);
+
+const useStyles = makeStyles((theme) => ({
   gridContainer: {
     boxSizing: "border-box",
     margin: 0,
     paddingLeft: 2,
   },
-});
+  message: {
+    textAlign: "center",
+    margin: "2em",
+    fontSize: "2em",
+    marginLeft: "9.5em",
+    color: theme.palette.appBg.darkest,
+  },
+}));
 
-const VideoContainer = () => {
+const VideoContainer = (props) => {
+  const allVideos = (props.location && props.location.state) || props.allVideos;
+  const cardWidth = props.cardWidth ? props.cardWidth : 326;
+  const videos = props.videos;
+  const variant = props.variant;
   const classes = useStyles();
+  const [userState, setUserState] = useUserState();
+
+  const videoCards = (videoList, cardWidth) =>
+    videoList.map((video) => (
+      <Grid item key={video.id}>
+        <VideoCard
+          // key={video.id}
+          avatarSrc={video.channel.avatar}
+          imgSrc={video.thumbnail}
+          title={video.title}
+          channelName={video.channel.user.username}
+          timeAgo={dayjs(video.upload_date).fromNow()}
+          views={abbreviateNumber(video.plays)}
+          duration={getTimeFromSecs(video.duration)}
+          videoData={video}
+          variant={props.variant}
+          cardWidth={cardWidth}
+          isLoggedInUser={userState.moreChannelData.id == video.channel.id}
+        />
+      </Grid>
+    ));
+
+  if (allVideos) {
+    return (
+      <Grid
+        container
+        direction={props.gridDirection && props.gridDirection}
+        className={classes.gridContainer}
+      >
+        {videoCards(allVideos, cardWidth)}
+      </Grid>
+    );
+  }
+
   return (
-    <Grid container className={classes.gridContainer}>
-      <Grid item>
+    <Grid
+      container
+      className={classes.gridContainer}
+      style={variant === "horizontal" ? { justifyContent: "center" } : {}}
+    >
+      {videos && videos.length > 0 ? (
+        videoCards(videos, variant === "horizontal" ? "65em" : 365)
+      ) : (
+        <Typography className={classes.message}>
+          There are no videos on this channel
+        </Typography>
+      )}
+    </Grid>
+  );
+};
+
+export default withRouter(VideoContainer);
+
+{
+  /* <Grid item>
         <VideoCard
           imgSrc="https://miro.medium.com/max/3840/1*yjH3SiDaVWtpBX0g_2q68g.png"
           title="Learn React "
@@ -22,8 +97,14 @@ const VideoContainer = () => {
           avatarSrc="https://facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png?w=512&h=512"
           views="3.2M"
           timeAgo="2 years ago"
+          // variant="horizontal"
+          //change this width for channel view of videos. Give ems
+          // cardWidth="65em"
+          description="Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
+          across all continents except Antarctica Lizards are a widespread group of squamate reptiles, with over 6,000 species,"
         />
       </Grid>
+
       <Grid item>
         <VideoCard
           imgSrc="https://i.ytimg.com/vi/hcbfF8I9zCo/maxresdefault.jpg"
@@ -133,9 +214,5 @@ const VideoContainer = () => {
           views="700k"
           timeAgo="1 year ago"
         />
-      </Grid>
-    </Grid>
-  );
-};
-
-export default VideoContainer;
+      </Grid> */
+}

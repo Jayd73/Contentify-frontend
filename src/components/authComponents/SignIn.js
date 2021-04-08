@@ -118,7 +118,15 @@ export default function SignIn() {
             console.log("Error from API: ", error);
           });
 
-        history.push("/videos");
+        axiosInstance
+          .get(`video/`)
+          .then((res) => {
+            const allVideos = res.data;
+            history.push({ pathname: "/videos", state: allVideos });
+          })
+          .catch((err) => {
+            console.log("Error from API: ", err);
+          });
       })
       .catch((errors) => {
         // console.log("Error when Login: ", errors.response.data);

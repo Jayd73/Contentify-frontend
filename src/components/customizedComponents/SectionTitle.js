@@ -33,11 +33,13 @@ function SectionTitle({
   const theme = useTheme();
 
   React.useEffect(() => {
-    window.scrollTo(
-      0,
-      headingRef.current.getBoundingClientRect().top -
-        theme.mixins.toolbar.minHeight
-    );
+    const yPos = 447.1875;
+    if (
+      headingRef.current.getBoundingClientRect().top >
+      theme.mixins.toolbar.minHeight
+    ) {
+      window.scrollTo(0, yPos - theme.mixins.toolbar.minHeight);
+    }
   }, []);
 
   return (

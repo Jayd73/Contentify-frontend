@@ -16,6 +16,8 @@ import UserPosts from "./components/channelComponents/UserPosts";
 import UserVideos from "./components/channelComponents/UserVideos";
 import UserAudios from "./components/channelComponents/UserAudios";
 
+import PlayingInterface from "./components/mainInterface/PlayingInterface";
+
 import { Route, Switch } from "react-router-dom";
 
 function App() {
@@ -109,6 +111,46 @@ function App() {
             />
           )}
         />
+        {/* <Route
+          exact
+          from="/channel/:channelSlug/videos/:videoSlug"
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserVideos} />
+              )}
+            />
+          )}
+        />
+        <Route
+          exact
+          from="/channel/:channelSlug/audios/:audioSlug"
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserAudios} />
+              )}
+            />
+          )}
+        /> */}
+
+        {/* dummy route for development */}
+        <Route
+          exact
+          from="/dev"
+          component={() => <MainApp ChildComponent={PlayingInterface} />}
+        />
+        {/* End ofdummy dev routes */}
+        <Route
+          exact
+          from="/channel/:channelSlug/:mediaType/:mediaSlug"
+          component={() => <MainApp ChildComponent={PlayingInterface} />}
+        />
+        {/* <Route
+          exact
+          from="/channel/:channelSlug/audios/:audioSlug"
+          component={() => <MainApp ChildComponent={PlayingInterface} />}
+        /> */}
       </Switch>
     </>
   );

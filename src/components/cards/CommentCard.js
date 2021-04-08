@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useUserState } from "../../contexts/UserContext";
+
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -8,6 +10,7 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
+import axiosInstance from "../../axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,46 +30,82 @@ const useStyles = makeStyles((theme) => ({
   expandOpen: {
     transform: "rotate(180deg)",
   },
+  commentText: {
+    fontSize: "1em",
+    color: theme.palette.appBg.darkest,
+    wordWrap: "break-word",
+  },
 }));
 
-const CommentCard = ({ avatarSrc, uname, timeAgo, text }) => {
+const CommentCard = ({ key, timeAgo, avatarSrc, commentData }) => {
   const classes = useStyles();
   const [liked, setLiked] = React.useState(false);
-  const [likes, setLikes] = React.useState(Math.floor(Math.random() * 10));
-  const postingTime = timeAgo + " ago";
+  const [likes, setLikes] = React.useState(commentData.likes);
+  const [userState, setUserState] = useUserState();
+  const postingTime = timeAgo;
+
+  useEffect(() => {
+    if (
+      commentData.liked_by.some(
+        (channel) => channel.id === userState.moreChannelData.id
+      )
+    ) {
+      setLiked(true);
+    }
+  }, []);
 
   const toggleLike = () => {
     setLiked(!liked);
-    if (liked) setLikes(likes - 1);
-    else setLikes(likes + 1);
+    let currLikes = likes;
+    if (liked) {
+      currLikes -= 1; // Doing the opposite bcoz useState has not updated the values yet
+      setLikes(likes - 1);
+    } else {
+      currLikes += 1;
+      setLikes(likes + 1);
+    }
+
+    axiosInstance
+      .patch(`comment/updatelikes/${commentData.id}/`, {
+        likes: currLikes,
+      })
+      .then((res) => {
+        setLikes(res.data.likes);
+      })
+      .catch((err) => {
+        console.log("Error while updating likes: ", err.response);
+      });
   };
 
   return (
     <Card className={classes.root} variant="outlined" raised={false}>
       <CardHeader
-        style={{ marginLeft: "-0.8em" }}
+        style={{ marginLeft: "-1em" }}
         avatar={<Avatar src={avatarSrc} />}
-        title={uname}
+        title={commentData.channel.user.username}
         subheader={postingTime}
       />
       <div
         style={{
           marginTop: "-1.3em",
-          marginLeft: "2.7em",
+          marginLeft: "2.45em",
         }}
       >
         <CardContent>
           <Typography
-            style={{ fontSize: "1em" }}
+            className={classes.commentText}
             variant="body2"
             color="textSecondary"
             component="p"
           >
-            {text}
+            {commentData.text}
           </Typography>
         </CardContent>
 
-        <CardActions disableSpacing style={{ marginTop: "-1em" }}>
+        <CardActions
+          disableSpacing
+          style={{ marginTop: "-1em", marginLeft: "-0.3em" }}
+        >
           <IconButton aria-label="likes" onClick={toggleLike}>
             <ThumbUpIcon color={liked ? "primary" : "inherit"} />
           </IconButton>

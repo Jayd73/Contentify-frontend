@@ -1,7 +1,7 @@
 import React from "react";
 import axiosInstance from "../../axios";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useUserState } from "../../contexts/UserContext";
 import { useHistory, useParams } from "react-router-dom";
@@ -25,8 +25,9 @@ import InfoIcon from "@material-ui/icons/Info";
 import Icon from "@material-ui/core/Icon";
 
 import Snackbar from "@material-ui/core/Snackbar";
+import { abbreviateNumber } from "../miscellaneous/HelperFunctions";
 
-const drawerWidth = 240;
+const drawerWidth = 220;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -294,7 +295,8 @@ function ChannelContainer({ ChildComponent }) {
             {channelData.user && channelData.user.username}
           </Typography>
           <Typography variant="h6" className={classes.following}>
-            {channelData.followers && channelData.followers} followers
+            {channelData.followers && abbreviateNumber(channelData.followers)}{" "}
+            followers
           </Typography>
         </div>
         <div className={classes.grow}></div>

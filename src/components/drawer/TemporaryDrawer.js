@@ -41,12 +41,31 @@ const TemporaryDrawer = (props) => {
     {
       name: "Videos",
       icon: <OndemandVideoIcon />,
-      onClick: () => history.push("/videos"),
+      onClick: () => {
+        axiosInstance
+          .get(`video/`)
+          .then((res) => {
+            const allVideos = res.data;
+            history.push({ pathname: "/videos", state: allVideos });
+          })
+          .catch((err) => {
+            console.log("Error from API: ", err);
+          });
+      },
     },
     {
       name: "Audios",
       icon: <AudiotrackIcon />,
-      onClick: () => history.push("/audios"),
+      onClick: () => {
+        axiosInstance
+          .get(`audio/`)
+          .then((res) => {
+            history.push({ pathname: "/audios", state: res.data });
+          })
+          .catch((err) => {
+            console.log("Error from API: ", err);
+          });
+      },
     },
     {
       name: "Posts",

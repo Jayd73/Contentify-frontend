@@ -6,10 +6,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, CardMedia, Icon, Typography } from "@material-ui/core";
 import { useUserState } from "../../contexts/UserContext";
 import { useHistory } from "react-router-dom";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import EmojiTextField from "../customizedComponents/EmojiTextField";
+import SelectInput from "@material-ui/core/Select/SelectInput";
 
-let dayjs = require("dayjs");
+import { slugify } from "../miscellaneous/HelperFunctions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +58,31 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1em",
     marginBottom: "0.5em",
   },
+
+  pictureAndProgress: {
+    display: "flex",
+    alignItems: "center",
+    // border: "2px solid blue",
+  },
+
+  uploading: {
+    display: "flex",
+    flexDirection: "column",
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    color: theme.palette.secondary.main,
+    fontSize: "2em",
+    fontWeight: "bold",
+    // border: "2px solid red",
+    marginBottom: "2.5em",
+    marginLeft: "1em",
+  },
+  progressBar: {
+    width: "10em",
+    marginTop: "0.7em",
+    height: "0.4em",
+  },
 }));
 
 function UploadMultimediaForm({ type, setShowForm }) {
@@ -70,6 +97,12 @@ function UploadMultimediaForm({ type, setShowForm }) {
     pictureErr: "",
     mediaFileErr: "",
   };
+  const uploadData = {
+    uploading: false,
+    message: "Uploading...",
+    barVariant: "indeterminate",
+    uploadDone: false,
+  };
 
   const maxTitleLen = 200;
   const maxDescrpLen = 10000;
@@ -80,25 +113,10 @@ function UploadMultimediaForm({ type, setShowForm }) {
   const [previewURL, setPreviewURL] = useState();
   const [mediaFile, setMediaFile] = useState();
   const [mediaFileName, setMediaFileName] = useState();
-  const [mediaFileDur, setMediaFileDur] = useState(1);
-
-  function slugify(string) {
-    return (
-      string
-        .toString()
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w\-]+/g, "")
-        .replace(/\-\-+/g, "-")
-        .replace(/^-+/, "")
-        .replace(/-+$/, "") +
-      Math.random().toString(36).substr(2, 4) +
-      dayjs().format("SSSss")
-    );
-  }
+  const [uploadStatus, setUploadStatus] = useState(uploadData);
 
   function uploadToDB(fileDur) {
+    setUploadStatus({ ...uploadStatus, uploading: true });
     let mediaFormData = new FormData();
     mediaFormData.append("title", formData.title);
     mediaFormData.append("description", formData.description);
@@ -107,12 +125,42 @@ function UploadMultimediaForm({ type, setShowForm }) {
     mediaFormData.append("duration", fileDur);
     if (type == "video") {
       mediaFormData.append("thumbnail", picture);
-      axiosInstance.post(`video/create/`, mediaFormData);
-      history.push(`/channel/${userState.moreChannelData.slug}/videos`);
+      axiosInstance.post(`video/create/`, mediaFormData).then((res) => {
+        setUploadStatus({
+          ...uploadStatus,
+          uploading: false,
+          uploadDone: true,
+          message: "Done ☑️",
+          barVariant: "determinate",
+        });
+        userState.setSnackbarMsg(
+          type[0].toUpperCase() + type.substring(1) + " uploaded successfully"
+        );
+        userState.setSnackbarOpen(true);
+        userState.setSnackbarOpen(true);
+        setTimeout(() => {
+          history.push(`/channel/${userState.moreChannelData.slug}/videos`);
+        }, 1400);
+      });
     } else {
       mediaFormData.append("cover", picture);
-      axiosInstance.post(`audio/create/`, mediaFormData);
-      history.push(`/channel/${userState.moreChannelData.slug}/audios`);
+      axiosInstance.post(`audio/create/`, mediaFormData).then((res) => {
+        setUploadStatus({
+          ...uploadStatus,
+          uploading: false,
+          uploadDone: true,
+          message: "Done ☑️",
+          barVariant: "determinate",
+        });
+        userState.setSnackbarMsg(
+          type[0].toUpperCase() + type.substring(1) + " uploaded successfully"
+        );
+        userState.setSnackbarOpen(true);
+        userState.setSnackbarOpen(true);
+        setTimeout(() => {
+          history.push(`/channel/${userState.moreChannelData.slug}/audios`);
+        }, 1400);
+      });
     }
   }
 
@@ -260,6 +308,7 @@ function UploadMultimediaForm({ type, setShowForm }) {
             Add {type == "video" ? "picture" : "cover"}
           </Button>
         </label>
+
         {!picture ? (
           <Typography
             className={classes.fileNameStyle}
@@ -273,15 +322,30 @@ function UploadMultimediaForm({ type, setShowForm }) {
       </div>
 
       <br />
-      {previewURL ? (
-        <CardMedia
-          className={classes.previewImg}
-          image={previewURL}
-          style={type === "video" ? {} : { width: 224, height: 256 }}
-        />
-      ) : (
-        ""
-      )}
+      <div className={classes.pictureAndProgress}>
+        {previewURL ? (
+          <CardMedia
+            className={classes.previewImg}
+            image={previewURL}
+            style={type === "video" ? {} : { width: 224, height: 256 }}
+          />
+        ) : (
+          ""
+        )}
+        {uploadStatus.uploading || uploadStatus.uploadDone ? (
+          <div className={classes.uploading}>
+            {uploadStatus.message}
+            <br />
+            <LinearProgress
+              variant={uploadStatus.barVariant}
+              className={classes.progressBar}
+              value={100}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
       <div className={classes.mediaBtnContainer}>
         <input
           style={{ display: "none" }}

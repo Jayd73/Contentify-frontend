@@ -36,6 +36,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import ButtonBase from "@material-ui/core/ButtonBase";
 
 import ShareLinkDialog from "../customizedComponents/ShareLinkDialog";
+import CommentContainer from "../mainContainer/CommentContainer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,20 +58,6 @@ const useStyles = makeStyles((theme) => ({
   },
   expandOpen: {
     transform: "rotate(180deg)",
-  },
-  comment: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  commentBox: {
-    display: "flex",
-    alignItems: "center",
-    marginBottom: "0.5em",
-  },
-  commentInput: {
-    width: "23em",
-    marginInline: 15,
   },
   postText: {
     fontSize: "1.2em",
@@ -97,8 +84,6 @@ const PostCard = ({
   const [expanded, setExpanded] = useState(false);
   const [userState, setUserState] = useUserState();
   const [liked, setLiked] = useState(false);
-  const [commentCards, setCommentCards] = useState([]);
-  const [comment, setComment] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [showComponent, setShowComponent] = useState(true);
   const [openConfDialog, setOpenConfDialog] = useState(false);
@@ -132,23 +117,6 @@ const PostCard = ({
     setLiked(!liked);
   };
 
-  const postComment = () => {
-    setCommentCards([
-      ...commentCards,
-      <CommentCard
-        avatarSrc={userState.userAvatar}
-        uname={userState.username}
-        text={comment}
-        timeAgo="Few moments"
-      />,
-    ]);
-    setComment("");
-  };
-
-  const handleCommentOnChange = ({ target }) => {
-    setComment(target.value);
-  };
-
   const handleDelete = () => {
     setOpenConfDialog(false);
     axiosInstance
@@ -173,6 +141,7 @@ const PostCard = ({
   };
 
   const handleShare = () => {
+    setAnchorEl(null);
     setOpenShareDialog(true);
   };
 
@@ -296,39 +265,10 @@ const PostCard = ({
           </CardActions>
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent className={classes.comment}>
-              <Typography
-                style={{ fontSize: "1.2em" }}
-                variant="body2"
-                color="textSecondary"
-                component="p"
-              >
-                Comments
-              </Typography>
-              <div className={classes.commentBox}>
-                <Avatar src={userState.userAvatar} />
-                <TextField
-                  size="small"
-                  multiline
-                  variant="outlined"
-                  placeholder="Comment..."
-                  className={classes.commentInput}
-                  onChange={handleCommentOnChange}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ height: "2rem" }}
-                  onClick={postComment}
-                >
-                  POST
-                </Button>
-              </div>
-              <CommentCard
-                uname="Nathan Evans"
-                timeAgo="10 days"
-                text="Since component logic is written in JavaScript instead of templates, you can easily pass rich data through your app and keep state out of the DOM."
+              <CommentContainer
+                commentOn={"userpost"}
+                componentID={userPostID}
               />
-              {commentCards.map((CmntCard) => CmntCard)}
             </CardContent>
           </Collapse>
         </Card>
