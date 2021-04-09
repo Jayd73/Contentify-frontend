@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CommentCard = ({ key, timeAgo, avatarSrc, commentData }) => {
+const CommentCard = ({ timeAgo, avatarSrc, commentData }) => {
   const classes = useStyles();
   const [liked, setLiked] = React.useState(false);
   const [likes, setLikes] = React.useState(commentData.likes);

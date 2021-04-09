@@ -80,14 +80,17 @@ function AudioCard({
   cardWidth,
   audioData,
   isLoggedInUser,
+  reloadReq,
 }) {
   const classes = useStyles();
-  const maxTitleLen = 53;
+  const maxTitleLen = 45;
   const maxCreatorNameLen = 26;
   const maxDetailsLen = 90;
   const coverWidth = 0.35 * cardWidth;
-  const details = channelName + " | " + listens + " listens | " + timeAgo;
-  creatorName = creatorName ? creatorName : channelName;
+  const listensForm = listens == 1 ? "listen" : "listens";
+  const details =
+    channelName + " | " + listens + " " + listensForm + " | " + timeAgo;
+  creatorName = audioData.subheader ? audioData.subheader : channelName;
 
   const history = useHistory();
   const [userState, setUserState] = useUserState();
@@ -95,6 +98,7 @@ function AudioCard({
   const [showComponent, setShowComponent] = useState(true);
   const [openConfDialog, setOpenConfDialog] = useState(false);
   const [openShareDialog, setOpenShareDialog] = useState(false);
+  creatorName = creatorName ? creatorName : channelName;
   let postLinkAddress = `${window.location.host}/channel/${audioData.channel.slug}/audio/${audioData.slug}`;
 
   const open = Boolean(anchorEl);
@@ -104,7 +108,8 @@ function AudioCard({
     {
       name: "Delete",
       icon: <DeleteIcon />,
-      onClick: () => {
+      onClick: (e) => {
+        e.preventDefault();
         setOpenConfDialog(true);
       },
       isPublic: false,
@@ -112,7 +117,8 @@ function AudioCard({
     {
       name: "Share",
       icon: <ShareIcon />,
-      onClick: () => {
+      onClick: (e) => {
+        e.preventDefault();
         handleShare();
       },
       isPublic: true,
@@ -127,8 +133,9 @@ function AudioCard({
     }
   }, []);
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleMenuClick = (e) => {
+    // e.preventDefault();
+    setAnchorEl(e.currentTarget);
   };
 
   const handleDelete = () => {
@@ -153,6 +160,13 @@ function AudioCard({
 
   const handleShare = () => {
     setOpenShareDialog(true);
+  };
+
+  const goForPlaying = (e) => {
+    history.push(`/channel/${audioData.channel.slug}/audio/${audioData.slug}`);
+    if (reloadReq) {
+      window.location.reload();
+    }
   };
 
   return (
@@ -208,6 +222,7 @@ function AudioCard({
             open={openShareDialog}
             setOpen={setOpenShareDialog}
             linkAddress={postLinkAddress}
+            setAnchorEl={setAnchorEl}
           />
 
           <CardMedia
@@ -215,6 +230,7 @@ function AudioCard({
             className={classes.cover}
             image={imgSrc}
             style={{ width: coverWidth }}
+            onClick={goForPlaying}
           />
 
           <div
@@ -250,10 +266,22 @@ function AudioCard({
                     fontSize: 0.038 * cardWidth,
                     wordWrap: "break-word",
                   }}
+                  onClick={goForPlaying}
                 >
                   {title.length > maxTitleLen
                     ? title.substring(0, maxTitleLen) + "..."
                     : title}
+                </Typography>
+              }
+              subheader={
+                <Typography
+                  style={{ fontSize: 0.035 * cardWidth }}
+                  color="textSecondary"
+                  onClick={goForPlaying}
+                >
+                  {creatorName.length > maxCreatorNameLen
+                    ? creatorName.substring(0, maxCreatorNameLen) + "..."
+                    : creatorName}
                 </Typography>
               }
             />
@@ -265,9 +293,10 @@ function AudioCard({
                 <Avatar
                   style={{ height: 0.12 * cardWidth, width: 0.12 * cardWidth }}
                   src={avatarSrc}
-                  onClick={() =>
-                    history.push(`/channel/${audioData.channel.slug}`)
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    history.push(`/channel/${audioData.channel.slug}`);
+                  }}
                 />
               }
               subheader={

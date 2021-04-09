@@ -17,7 +17,7 @@ import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
 import ShareIcon from "@material-ui/icons/Share";
 
 import ShareLinkDialog from "../customizedComponents/ShareLinkDialog";
-import VideoPlayer from "../players/VideoPlayer";
+import CustomVideoPlayer from "../players/CustomVideoPlayer";
 import CustomAudioPlayer from "../players/CustomAudioPlayer";
 
 let dayjs = require("dayjs");
@@ -31,13 +31,15 @@ const useStyles = makeStyles((theme) => ({
   },
   leftBox: {
     flexGrow: 1,
-    marginInline: "1em",
+    marginInline: "0.5em",
   },
   rightBox: {
     objectFit: "contain",
   },
   playerContainer: {
     width: "100%",
+    display: "flex",
+    justifyContent: "center",
     // paddingTop: "56.25%",
   },
 
@@ -123,6 +125,7 @@ function PlayingInterface() {
     axiosInstance
       .get(`${mediaType}/`)
       .then((res) => {
+        res.data = res.data.filter((mediaObj) => mediaObj.slug != mediaSlug);
         shuffleArr(res.data);
         setAllMedia(res.data);
       })
@@ -135,9 +138,17 @@ function PlayingInterface() {
       .then((res) => {
         setMediaData(res.data);
         setDetais(
-          `${abbreviateNumber(res.data.plays)} ${
-            mediaType == "video" ? "views" : "listens"
-          } | ${dayjs(res.data.upload_date).format("MMM DD, YYYY")}`
+          `${abbreviateNumber(res.data.plays + 1)} ${
+            res.data.plays + 1 == 1
+              ? mediaType == "video"
+                ? "view"
+                : "listen"
+              : mediaType == "video"
+              ? "views"
+              : "listens"
+          } ${mediaType == "video" ? "views" : "listens"} | ${dayjs(
+            res.data.upload_date
+          ).format("MMM DD, YYYY")}`
         );
         setLikes(res.data.likes);
         setFollowers(res.data.channel.followers);
@@ -145,7 +156,22 @@ function PlayingInterface() {
       .catch((err) => {
         console.log("Error from API: ", err);
       });
+
+    window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (mediaData) {
+      let mediaFormData = new FormData();
+      mediaFormData.append("plays", mediaData.plays + 1);
+      axiosInstance
+        .patch(`${mediaType}/edit/${mediaData.id}/`, mediaFormData)
+        .catch((err) => {
+          console.log("Error from API: ", err);
+        });
+      window.scrollTo(0, 0);
+    }
+  }, [mediaData]);
 
   const toggleLike = () => {
     setLiked(!liked);
@@ -171,20 +197,34 @@ function PlayingInterface() {
     setOpenShareDialog(true);
   };
 
+  const playNextAudio = () => {
+    history.push(
+      `/channel/${allMedia[0].channel.slug}/audio/${allMedia[0].slug}`
+    );
+    window.location.reload();
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.leftBox}>
         <div className={classes.playerContainer}>
-          {mediaType === "video" ? (
-            <VideoPlayer
-              thumbnailSrc={mediaData && mediaData.thumbnail}
-              videoSrc={mediaData && mediaData.file}
-            />
+          {mediaData ? (
+            mediaType === "video" ? (
+              <CustomVideoPlayer
+                thumbnailSrc={mediaData.thumbnail}
+                videoSrc={mediaData.file}
+              />
+            ) : (
+              <CustomAudioPlayer
+                coverSrc={mediaData.cover}
+                audioSrc={mediaData.file}
+                name={mediaData.title}
+                subheader={mediaData.subheader}
+                playNext={playNextAudio}
+              />
+            )
           ) : (
-            <CustomAudioPlayer
-              coverSrc={mediaData && mediaData.cover}
-              audioSrc={mediaData && mediaData.file}
-            />
+            ""
           )}
         </div>
         <Typography className={classes.headingText}>
@@ -255,12 +295,18 @@ function PlayingInterface() {
           >
             Description
           </Typography>
-          <Typography component="pre">
+          <Typography component="pre" style={{ whiteSpace: "pre-wrap" }}>
             {mediaData && mediaData.description}
           </Typography>
         </div>
         {mediaData && (
-          <div style={{ padding: "1em", paddingInline: "1em" }}>
+          <div
+            style={{
+              padding: "1em",
+              paddingInline: "1em",
+              objectFit: "contain",
+            }}
+          >
             <CommentContainer
               commentOn={mediaType}
               componentID={mediaData.id}
@@ -274,12 +320,14 @@ function PlayingInterface() {
             allVideos={allMedia}
             gridDirection="column"
             cardWidth={400}
+            reloadReq={true}
           />
         ) : (
           <AudioContainer
             allAudios={allMedia}
             gridDirection="column"
             cardWidth={380}
+            reloadReq={true}
           />
         )}
       </div>

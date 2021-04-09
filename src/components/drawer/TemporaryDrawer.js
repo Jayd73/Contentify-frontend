@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     // backgroundColor: "#0c1729",
-    width: "13em",
+    width: "12em",
   },
   drawerHeader: {
     display: "flex",
@@ -85,8 +85,7 @@ const TemporaryDrawer = (props) => {
   ];
 
   const otherOptions = {
-    Following: <SubscriptionsIcon />,
-    "My playlists": <PlaylistPlayIcon />,
+    Following: <Icon>person_add</Icon>,
   };
   const classes = useStyles();
 

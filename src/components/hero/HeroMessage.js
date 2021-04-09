@@ -16,7 +16,7 @@ function HeroMessage() {
       <center style={heroFont}>
         <h1 style={heroFont}>Get a whole new content experience</h1>
         <br />
-        Introducing Contentify - A platform for streaming multimedia
+        Introducing Contentify - A platform for sharing multimedia
       </center>
     </div>
   );

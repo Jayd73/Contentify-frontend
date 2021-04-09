@@ -31,7 +31,11 @@ const useStyles = makeStyles((theme) => ({
 
 const VideoContainer = (props) => {
   const allVideos = (props.location && props.location.state) || props.allVideos;
-  const cardWidth = props.cardWidth ? props.cardWidth : 326;
+  const cardWidth = props.cardWidth
+    ? props.cardWidth
+    : props.variant
+    ? "65em"
+    : 326;
   const videos = props.videos;
   const variant = props.variant;
   const classes = useStyles();
@@ -52,6 +56,7 @@ const VideoContainer = (props) => {
           videoData={video}
           variant={props.variant}
           cardWidth={cardWidth}
+          reloadReq={props.reloadReq}
           isLoggedInUser={userState.moreChannelData.id == video.channel.id}
         />
       </Grid>
@@ -63,6 +68,7 @@ const VideoContainer = (props) => {
         container
         direction={props.gridDirection && props.gridDirection}
         className={classes.gridContainer}
+        style={variant === "horizontal" ? { justifyContent: "center" } : {}}
       >
         {videoCards(allVideos, cardWidth)}
       </Grid>

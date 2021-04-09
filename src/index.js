@@ -17,6 +17,7 @@ const theme = createMuiTheme({
       main: "#233044",
       textColor: "#eeeee9",
       iconColor: "#878e98",
+      bright: "#004fcf",
     },
     appBg: {
       light: "#fafafa",

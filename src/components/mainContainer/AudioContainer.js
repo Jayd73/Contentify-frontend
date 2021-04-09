@@ -51,6 +51,7 @@ const AudioContainer = (props) => {
           audioData={audio}
           cardWidth={cardWidth}
           isLoggedInUser={userState.moreChannelData.id == audio.channel.id}
+          reloadReq={props.reloadReq}
         />
       </Grid>
     ));

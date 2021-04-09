@@ -21,6 +21,14 @@ import Avatar from "@material-ui/core/Avatar";
 import "../header/Header.css";
 import TemporaryDrawer from "../drawer/TemporaryDrawer";
 import ProfilePopover from "./ProfilePopover";
+import { Icon } from "@material-ui/core";
+
+import Popover from "@material-ui/core/Popover";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -79,9 +87,20 @@ export default function PrimarySearchAppBar() {
   const [drawerState, setDrawerState] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [userState, setUserState] = useUserState();
+  const [searchText, setSearchText] = React.useState("");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const [anchorElFilter, setAnchorElFilter] = React.useState(null);
+  const open = Boolean(anchorElFilter);
+  const id = open ? "simple-popover" : undefined;
+
+  const [filterValue, setFilterValue] = React.useState("video");
+
+  const handleFilterChange = (event) => {
+    setFilterValue(event.target.value);
+  };
 
   const toggleDrawer = (open) => (event) => {
     if (
@@ -108,6 +127,22 @@ export default function PrimarySearchAppBar() {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const goSearch = () => {
+    if (searchText.trim()) {
+      history.push({
+        pathname: `/search/${filterValue}/`,
+        search: "?search=" + searchText,
+      });
+      window.location.reload();
+    }
+  };
+
+  const onKeyPress = (e) => {
+    if (e.keyCode == 13) {
+      goSearch();
+    }
   };
 
   const menuId = "primary-search-account-menu";
@@ -187,16 +222,24 @@ export default function PrimarySearchAppBar() {
             type="text"
             id="searchbox"
             className="searchbox"
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={onKeyPress}
             style={{ marginRight: "6em" }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    size="small"
-                    // onClick={handleClickShowPassword}
-                    // onMouseDown={handleMouseDownPassword}
-                  >
+                  <IconButton size="small" onClick={() => goSearch()}>
                     <SearchIcon />
+                  </IconButton>
+                  <IconButton
+                    color="inherit"
+                    onClick={(event) =>
+                      setAnchorElFilter(
+                        anchorElFilter ? null : event.currentTarget
+                      )
+                    } //
+                  >
+                    <Icon>filter_list</Icon>
                   </IconButton>
                 </InputAdornment>
               ),
@@ -219,6 +262,58 @@ export default function PrimarySearchAppBar() {
             >
               <Avatar src={userState.userAvatar} />
             </IconButton>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorElFilter}
+              onClose={() => setAnchorElFilter(null)}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              style={{ zIndex: 1600 }}
+            >
+              <FormControl
+                component="fieldset"
+                style={{
+                  margin: "1.2em",
+                }}
+              >
+                <FormLabel
+                  component="legend"
+                  style={{ marginBottom: "0.5em" }}
+                  color="secondary"
+                >
+                  Filters
+                </FormLabel>
+                <RadioGroup
+                  aria-label="filter"
+                  name="filter1"
+                  value={filterValue}
+                  onChange={handleFilterChange}
+                >
+                  <FormControlLabel
+                    value="video"
+                    control={<Radio color="primary" />}
+                    label="Videos"
+                  />
+                  <FormControlLabel
+                    value="audio"
+                    control={<Radio color="primary" />}
+                    label="Audios"
+                  />
+                  <FormControlLabel
+                    value="userpost"
+                    control={<Radio color="primary" />}
+                    label="Posts"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Popover>
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

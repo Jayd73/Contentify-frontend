@@ -133,6 +133,11 @@ function ChannelContainer({ ChildComponent }) {
       icon: <Icon>article</Icon>,
       onClick: () => history.push(`/channel/${channelSlug}/posts`),
     },
+    {
+      name: "Analytics",
+      icon: <Icon>analytics</Icon>,
+      onClick: () => history.push(`/channel/${channelSlug}/analytics`),
+    },
   ];
 
   function isFollowing() {

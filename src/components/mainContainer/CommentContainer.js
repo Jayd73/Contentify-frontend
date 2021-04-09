@@ -36,31 +36,36 @@ const useStyles = makeStyles((theme) => ({
     // width: "23em",
     marginInline: 15,
   },
+  message: {
+    color: theme.palette.appBg.darkest,
+    fontSize: "1.6em",
+    margin: "2em",
+    textAlign: "center",
+    fontWeight: "bold",
+    opacity: 0.5,
+  },
 }));
 
 function CommentContainer({ commentOn, componentID }) {
   const classes = useStyles();
   const [userState, setUserState] = useUserState();
-  const [commentCards, setCommentCards] = useState([]);
   const [comment, setComment] = useState("");
+  const [commentData, setCommentData] = useState([]);
 
   useEffect(() => {
     axiosInstance
       .get(`comment/${commentOn}/${componentID}/`)
       .then((res) => {
         const allComments = res.data;
-        console.log("All comments: ", allComments);
+        let cmntData = [];
         allComments.map((comment) => {
-          setCommentCards([
-            ...commentCards,
-            <CommentCard
-              key={res.data.id}
-              avatarSrc={comment.channel.avatar}
-              timeAgo={dayjs(comment.posted_date).fromNow()}
-              commentData={comment}
-            />,
-          ]);
+          cmntData.push({
+            avatarSrc: comment.channel.avatar,
+            timeAgo: dayjs(comment.posted_date).fromNow(),
+            moreData: comment,
+          });
         });
+        setCommentData(cmntData);
       })
       .catch((err) => {
         console.log("Error while getting comments: ", err);
@@ -68,19 +73,21 @@ function CommentContainer({ commentOn, componentID }) {
   }, []);
 
   const postComment = () => {
+    if (!comment) {
+      return;
+    }
     axiosInstance
       .post(`comment/create/${commentOn}/${componentID}/`, {
         text: comment,
       })
       .then((res) => {
-        setCommentCards([
-          ...commentCards,
-          <CommentCard
-            key={res.data.id}
-            avatarSrc={userState.userAvatar}
-            timeAgo={dayjs(new Date()).fromNow()}
-            commentData={res.data}
-          />,
+        setCommentData([
+          ...commentData,
+          {
+            avatarSrc: userState.userAvatar,
+            timeAgo: dayjs(new Date()).fromNow(),
+            moreData: res.data,
+          },
         ]);
         setComment("");
       })
@@ -123,7 +130,23 @@ function CommentContainer({ commentOn, componentID }) {
           POST
         </Button>
       </div>
-      {commentCards.map((CmntCard) => CmntCard)}
+
+      {commentData.length == 0 ? (
+        <Typography className={classes.message}>
+          No comments made yet
+        </Typography>
+      ) : (
+        ""
+      )}
+
+      {commentData.map((comment) => (
+        <CommentCard
+          key={comment.moreData.id}
+          avatarSrc={comment.avatarSrc}
+          timeAgo={comment.timeAgo}
+          commentData={comment.moreData}
+        />
+      ))}
     </div>
   );
 }

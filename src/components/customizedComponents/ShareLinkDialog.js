@@ -68,7 +68,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-function ShareLinkDialog({ open, setOpen, linkAddress }) {
+function ShareLinkDialog({ open, setOpen, linkAddress, setAnchorEl }) {
   const classes = useStyles();
   const handleCopy = () => {
     //copy to clipboard here
@@ -78,6 +78,7 @@ function ShareLinkDialog({ open, setOpen, linkAddress }) {
 
   const handleClose = () => {
     setOpen(false);
+    setAnchorEl && setAnchorEl(null);
   };
 
   return (

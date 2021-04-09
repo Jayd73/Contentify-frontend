@@ -16,6 +16,7 @@ import { Typography } from "@material-ui/core";
 
 import ShareIcon from "@material-ui/icons/Share";
 import { Button } from "@material-ui/core";
+import ButtonBase from "@material-ui/core/ButtonBase";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import Popover from "@material-ui/core/Popover";
@@ -96,13 +97,16 @@ const VideoCard = ({
   description,
   videoData,
   isLoggedInUser,
+  reloadReq,
 }) => {
   const classes = useStyles();
   const maxTitleLen = 25;
   const maxDetailsLen = 90;
   const maxDescrpLen = 180;
-  const details = channelName + " | " + views + " views | " + timeAgo;
-  const h_details = views + " views | " + timeAgo;
+  const viewsForm = views == 1 ? "view" : "views";
+  const details =
+    channelName + " | " + views + " " + viewsForm + " | " + timeAgo;
+  const h_details = views + " " + viewsForm + " | " + timeAgo;
   const descrp_snippet =
     videoData.description.length > maxDescrpLen
       ? videoData.description.substring(0, maxDescrpLen) + "..."
@@ -123,7 +127,8 @@ const VideoCard = ({
     {
       name: "Delete",
       icon: <DeleteIcon />,
-      onClick: () => {
+      onClick: (e) => {
+        e.stopPropagation();
         setOpenConfDialog(true);
       },
       isPublic: false,
@@ -131,7 +136,8 @@ const VideoCard = ({
     {
       name: "Share",
       icon: <ShareIcon />,
-      onClick: () => {
+      onClick: (e) => {
+        e.stopPropagation();
         handleShare();
       },
       isPublic: true,
@@ -147,6 +153,7 @@ const VideoCard = ({
   }, []);
 
   const handleMenuClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
 
@@ -172,6 +179,13 @@ const VideoCard = ({
 
   const handleShare = () => {
     setOpenShareDialog(true);
+  };
+
+  const goForPlaying = () => {
+    history.push(`/channel/${videoData.channel.slug}/video/${videoData.slug}`);
+    if (reloadReq) {
+      window.location.reload();
+    }
   };
 
   if (variant == "horizontal") {
@@ -225,11 +239,12 @@ const VideoCard = ({
               open={openShareDialog}
               setOpen={setOpenShareDialog}
               linkAddress={postLinkAddress}
+              setAnchorEl={setAnchorEl}
             />
 
             <div style={{ display: "flex" }}>
               <div className={classes.h_media}>
-                <CardActionArea>
+                <CardActionArea onClick={goForPlaying}>
                   <CardMedia className={classes.h_media} image={imgSrc} />
                   <div className={classes.h_durationStyle}>
                     <Typography style={{ fontSize: "1em" }}>
@@ -250,6 +265,7 @@ const VideoCard = ({
                   title={
                     <Typography
                       style={{ fontSize: "1.2em", wordWrap: "break-word" }}
+                      onClick={goForPlaying}
                     >
                       {title.length > maxTitleLen
                         ? title.substring(0, maxTitleLen) + "..."
@@ -260,6 +276,7 @@ const VideoCard = ({
                     <Typography
                       style={{ fontSize: "0.9em" }}
                       color="textSecondary"
+                      onClick={goForPlaying}
                     >
                       {h_details.length > maxDetailsLen
                         ? h_details.substring(0, maxDetailsLen) + "..."
@@ -273,6 +290,7 @@ const VideoCard = ({
                     width: "100%",
                     height: "4.1em",
                   }}
+                  onClick={goForPlaying}
                 >
                   <Typography
                     variant="body2"
@@ -288,14 +306,19 @@ const VideoCard = ({
                     <Avatar
                       style={{ height: "2em", width: "2em" }}
                       src={avatarSrc}
-                      onClick={() =>
-                        history.push(`/channel/${videoData.channel.slug}`)
-                      }
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/channel/${videoData.channel.slug}`);
+                      }}
                     />
                   }
                   title={
                     <Typography
                       style={{ fontSize: "1.1em", wordWrap: "break-word" }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        history.push(`/channel/${videoData.channel.slug}`);
+                      }}
                     >
                       {channelName.length > maxTitleLen
                         ? channelName.substring(0, maxTitleLen) + "..."
@@ -363,8 +386,9 @@ const VideoCard = ({
             open={openShareDialog}
             setOpen={setOpenShareDialog}
             linkAddress={postLinkAddress}
+            setAnchorEl={setAnchorEl}
           />
-          <CardActionArea>
+          <CardActionArea onClick={goForPlaying}>
             <CardMedia className={classes.media} image={imgSrc} />
             <div className={classes.durationStyle}>
               <Typography style={{ fontSize: "1em" }}>
@@ -377,9 +401,10 @@ const VideoCard = ({
               <Avatar
                 style={{ height: "2.3em", width: "2.3em" }}
                 src={avatarSrc}
-                onClick={() =>
-                  history.push(`/channel/${videoData.channel.slug}`)
-                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  history.push(`/channel/${videoData.channel.slug}`);
+                }}
               />
             }
             action={

@@ -90,6 +90,7 @@ function UploadMultimediaForm({ type, setShowForm }) {
   const history = useHistory();
   const mediaFormData = {
     title: "",
+    subheader: "",
     description: "",
   };
   const errors = {
@@ -143,6 +144,7 @@ function UploadMultimediaForm({ type, setShowForm }) {
         }, 1400);
       });
     } else {
+      mediaFormData.append("subheader", formData.subheader);
       mediaFormData.append("cover", picture);
       axiosInstance.post(`audio/create/`, mediaFormData).then((res) => {
         setUploadStatus({
@@ -260,7 +262,6 @@ function UploadMultimediaForm({ type, setShowForm }) {
         className={classes.textFieldStyle}
         variant="outlined"
         label="Title"
-        multiline
         required
         value={mediaFormData.title}
         inputProps={{ maxLength: maxTitleLen }}
@@ -273,6 +274,22 @@ function UploadMultimediaForm({ type, setShowForm }) {
         type="text"
         id="title"
       />
+
+      {type === "audio" && (
+        <EmojiTextField
+          className={classes.textFieldStyle}
+          variant="outlined"
+          label="Subheader"
+          value={mediaFormData.subheader}
+          inputProps={{ maxLength: maxTitleLen }}
+          onChange={handleTextChange}
+          component="pre"
+          size="small"
+          name="subheader"
+          type="text"
+          id="subheader"
+        />
+      )}
 
       <EmojiTextField
         variant="outlined"
