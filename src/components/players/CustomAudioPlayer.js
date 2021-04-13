@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "22em",
     display: "flex",
+    // border: "1px solid black",
+    borderRadius: 10,
+    backgroundColor: theme.palette.appBg.dark,
     // "& div": {
     //   border: "1px solid black",
     // },
@@ -135,6 +138,7 @@ function CustomAudioPlayer({ coverSrc, name, subheader, audioSrc, playNext }) {
 
   useEffect(() => {
     togglePlay();
+    window.scrollTo(0, 0);
   }, []);
 
   const handleChange = (e, newValue) => {
@@ -191,7 +195,12 @@ function CustomAudioPlayer({ coverSrc, name, subheader, audioSrc, playNext }) {
               ? name.substring(0, maxTitleLen) + "..."
               : name}
           </Typography>
-          <Typography className={classes.subheader}>{subheader}</Typography>
+          <Typography
+            style={{ fontSize: "1.2em" }}
+            className={classes.subheader}
+          >
+            {subheader}
+          </Typography>
           <CustomSilder
             style={{ marginTop: "2.3em" }}
             value={percentage}

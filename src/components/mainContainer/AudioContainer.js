@@ -30,16 +30,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AudioContainer = (props) => {
-  const allAudios = (props.location && props.location.state) || props.allAudios;
+  let allAudios = (props.location && props.location.state) || props.allAudios;
   const audios = props.audios;
   const variant = props.variant;
-  const cardWidth = props.cardWidth ? props.cardWidth : 445;
+  const cardWidth = props.cardWidth ? props.cardWidth : 441;
   const classes = useStyles();
   const [userState, setUserState] = useUserState();
 
   const audioCards = (audioList, cardWidth) =>
     audioList.map((audio) => (
-      <Grid item key={audio.id}>
+      <Grid item key={audio.uid}>
         <AudioCard
           avatarSrc={audio.channel.avatar}
           imgSrc={audio.cover}
@@ -57,6 +57,12 @@ const AudioContainer = (props) => {
     ));
 
   if (allAudios) {
+    // for populating the container
+    if (props.location.state) {
+      for (let i = 0; i < 3; i++) {
+        allAudios = [...allAudios].concat(allAudios);
+      }
+    }
     return (
       <Grid
         container

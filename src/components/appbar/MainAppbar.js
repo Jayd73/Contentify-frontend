@@ -1,6 +1,8 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useUserState } from "../../contexts/UserContext";
+import axiosInstance from "../../axios";
+
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -173,7 +175,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem>
         <IconButton aria-label="show new notifications" color="inherit">
-          <Badge badgeContent={0} color="secondary">
+          <Badge badgeContent={5} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -211,7 +213,17 @@ export default function PrimarySearchAppBar() {
             className={classes.logo}
             src="/images/contentify-logo-v4.png"
             alt="Contentify"
-            onClick={() => history.push("/videos")}
+            onClick={() => {
+              axiosInstance
+                .get(`video/`)
+                .then((res) => {
+                  const allVideos = res.data;
+                  history.push({ pathname: "/videos", state: allVideos });
+                })
+                .catch((err) => {
+                  console.log("Error from API: ", err);
+                });
+            }}
           />
           <div className={classes.grow} />
           <TextField
@@ -310,6 +322,11 @@ export default function PrimarySearchAppBar() {
                     value="userpost"
                     control={<Radio color="primary" />}
                     label="Posts"
+                  />
+                  <FormControlLabel
+                    value="channel"
+                    control={<Radio color="primary" />}
+                    label="Channels"
                   />
                 </RadioGroup>
               </FormControl>

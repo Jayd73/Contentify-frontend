@@ -10,6 +10,8 @@ import {
   getTimeFromSecs,
 } from "../miscellaneous/HelperFunctions";
 
+import { shuffleArr } from "../miscellaneous/HelperFunctions";
+
 let dayjs = require("dayjs");
 var relativeTime = require("dayjs/plugin/relativeTime");
 dayjs.extend(relativeTime);
@@ -30,11 +32,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const VideoContainer = (props) => {
-  const allVideos = (props.location && props.location.state) || props.allVideos;
+  let allVideos = (props.location && props.location.state) || props.allVideos;
   const cardWidth = props.cardWidth
     ? props.cardWidth
     : props.variant
-    ? "65em"
+    ? 1040
     : 326;
   const videos = props.videos;
   const variant = props.variant;
@@ -43,7 +45,7 @@ const VideoContainer = (props) => {
 
   const videoCards = (videoList, cardWidth) =>
     videoList.map((video) => (
-      <Grid item key={video.id}>
+      <Grid item key={video.uid}>
         <VideoCard
           // key={video.id}
           avatarSrc={video.channel.avatar}
@@ -58,17 +60,25 @@ const VideoContainer = (props) => {
           cardWidth={cardWidth}
           reloadReq={props.reloadReq}
           isLoggedInUser={userState.moreChannelData.id == video.channel.id}
+          fitHtToText={props.gridDirection == "column"}
         />
       </Grid>
     ));
 
   if (allVideos) {
+    if (props.location.state) {
+      for (let i = 0; i < 3; i++) {
+        allVideos = [...allVideos].concat(allVideos);
+        // shuffleArr(allVideos);
+      }
+    }
+
     return (
       <Grid
         container
         direction={props.gridDirection && props.gridDirection}
         className={classes.gridContainer}
-        style={variant === "horizontal" ? { justifyContent: "center" } : {}}
+        style={variant === "horizontal" ? { alignItems: "center" } : {}}
       >
         {videoCards(allVideos, cardWidth)}
       </Grid>

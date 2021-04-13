@@ -1,5 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { useUserState } from "../../contexts/UserContext";
+
 import axiosInstance from "../../axios";
 
 import Drawer from "@material-ui/core/Drawer";
@@ -12,8 +14,6 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 
 import OndemandVideoIcon from "@material-ui/icons/OndemandVideo";
 import AudiotrackIcon from "@material-ui/icons/Audiotrack";
-import PlaylistPlayIcon from "@material-ui/icons/PlaylistPlay";
-import SubscriptionsIcon from "@material-ui/icons/Subscriptions";
 import { withRouter } from "react-router-dom";
 import Icon from "@material-ui/core/Icon";
 
@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
 
 const TemporaryDrawer = (props) => {
   const { drawerState, toggleDrawer, history } = props;
+  const [userState, setUserState] = useUserState();
+  const classes = useStyles();
+
   const homeSection = [
     {
       name: "Videos",
@@ -84,10 +87,27 @@ const TemporaryDrawer = (props) => {
     },
   ];
 
-  const otherOptions = {
-    Following: <Icon>person_add</Icon>,
-  };
-  const classes = useStyles();
+  const otherOptions = [
+    {
+      name: "Following",
+      icon: <Icon>person_add</Icon>,
+      onClick: () => {
+        axiosInstance
+          .get(`/channel/${userState.moreChannelData.id}/`)
+          .then((res) => {
+            const followedChannels = res.data.followedChannels;
+            console.log("followed: \n", followedChannels);
+            history.push({
+              pathname: `/channel/${userState.moreChannelData.slug}/following`,
+              state: followedChannels,
+            });
+          })
+          .catch((err) => {
+            console.log("Error from API: ", err);
+          });
+      },
+    },
+  ];
 
   const drawerContents = () => (
     <div className={classes.list}>
@@ -102,10 +122,10 @@ const TemporaryDrawer = (props) => {
       </List>
       <Divider />
       <List>
-        {Object.keys(otherOptions).map((key) => (
-          <ListItem button key={key}>
-            <ListItemIcon>{otherOptions[key]}</ListItemIcon>
-            <ListItemText primary={key} />
+        {otherOptions.map((item) => (
+          <ListItem button key={item.name} onClick={item.onClick}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.name} />
           </ListItem>
         ))}
       </List>

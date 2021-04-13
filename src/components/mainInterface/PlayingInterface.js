@@ -20,6 +20,8 @@ import ShareLinkDialog from "../customizedComponents/ShareLinkDialog";
 import CustomVideoPlayer from "../players/CustomVideoPlayer";
 import CustomAudioPlayer from "../players/CustomAudioPlayer";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 let dayjs = require("dayjs");
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +52,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.appBg.dark,
     padding: "0.3em 0.7em",
     borderBottom: `1px solid ${theme.palette.secondary.main}`,
+  },
+  subheader: {
+    fontSize: "0.7em",
+    color: theme.palette.appBg.darkest,
+    marginTop: "0.3em",
   },
   mediaDetailsAndAction: {
     width: "100%",
@@ -103,6 +110,13 @@ const useStyles = makeStyles((theme) => ({
     padding: "1em",
     backgroundColor: theme.palette.appBg.dark,
   },
+  progressContainer: {
+    width: "100%",
+    height: window.innerHeight - 130,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 function PlayingInterface() {
@@ -140,15 +154,13 @@ function PlayingInterface() {
         setDetais(
           `${abbreviateNumber(res.data.plays + 1)} ${
             res.data.plays + 1 == 1
-              ? mediaType == "video"
+              ? mediaType === "video"
                 ? "view"
                 : "listen"
-              : mediaType == "video"
+              : mediaType === "video"
               ? "views"
               : "listens"
-          } ${mediaType == "video" ? "views" : "listens"} | ${dayjs(
-            res.data.upload_date
-          ).format("MMM DD, YYYY")}`
+          } | ${dayjs(res.data.upload_date).format("MMM DD, YYYY")}`
         );
         setLikes(res.data.likes);
         setFollowers(res.data.channel.followers);
@@ -206,131 +218,149 @@ function PlayingInterface() {
 
   return (
     <div className={classes.root}>
-      <div className={classes.leftBox}>
-        <div className={classes.playerContainer}>
-          {mediaData ? (
-            mediaType === "video" ? (
-              <CustomVideoPlayer
-                thumbnailSrc={mediaData.thumbnail}
-                videoSrc={mediaData.file}
+      {mediaData ? (
+        <>
+          <div className={classes.leftBox}>
+            <div className={classes.playerContainer}>
+              {mediaData ? (
+                mediaType === "video" ? (
+                  <CustomVideoPlayer
+                    thumbnailSrc={mediaData.thumbnail}
+                    videoSrc={mediaData.file}
+                  />
+                ) : (
+                  <CustomAudioPlayer
+                    coverSrc={mediaData.cover}
+                    audioSrc={mediaData.file}
+                    name={mediaData.title}
+                    subheader={mediaData.subheader}
+                    playNext={playNextAudio}
+                  />
+                )
+              ) : (
+                ""
+              )}
+            </div>
+            <Typography className={classes.headingText}>
+              {mediaData && mediaData.title}
+              {mediaData && mediaData.subheader ? (
+                <Typography className={classes.subheader}>
+                  {mediaData.subheader}
+                </Typography>
+              ) : (
+                ""
+              )}
+            </Typography>
+
+            <div className={classes.mediaDetailsAndAction}>
+              <Typography className={classes.details}>{details}</Typography>
+              <div style={{ flexGrow: 1 }}></div>
+              <div className={classes.actionBtnDiv}>
+                <Button
+                  className={classes.actionBtn}
+                  variant="contained"
+                  color="primary"
+                  startIcon={liked ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
+                  onClick={toggleLike}
+                >
+                  Like {abbreviateNumber(likes)}
+                </Button>
+                <Button
+                  className={classes.actionBtn}
+                  variant="contained"
+                  color="primary"
+                  startIcon={<ShareIcon />}
+                  onClick={handleShare}
+                >
+                  Share
+                </Button>
+                <ShareLinkDialog
+                  open={openShareDialog}
+                  setOpen={setOpenShareDialog}
+                  linkAddress={`${window.location.host}/channel/${channelSlug}/${mediaType}/${mediaSlug}`}
+                />
+              </div>
+            </div>
+            <div className={classes.avatarAndFollow}>
+              <Avatar
+                className={classes.mainAvatar}
+                src={mediaData && mediaData.channel.avatar}
+                onClick={() =>
+                  history.push(`/channel/${mediaData.channel.slug}`)
+                }
+              />
+              <div>
+                <Typography className={classes.channelName}>
+                  {mediaData && mediaData.channel.user.username}
+                </Typography>
+                <Typography className={classes.followers}>
+                  {abbreviateNumber(followers)}{" "}
+                  {followers == 1 ? "follower" : "followers"}
+                </Typography>
+              </div>
+
+              <div style={{ flexGrow: 1 }}></div>
+              <Button
+                className={classes.actionBtn}
+                variant="contained"
+                color={isFollowing ? "secondary" : "primary"}
+                onClick={toggleFollow}
+              >
+                {isFollowing ? "Followed" : "Follow"}
+              </Button>
+            </div>
+            <div className={classes.description}>
+              <Typography
+                style={{
+                  fontWeight: "bolder",
+                  fontSize: "1.2em",
+                  marginBottom: "1em",
+                }}
+              >
+                Description
+              </Typography>
+              <Typography component="pre" style={{ whiteSpace: "pre-wrap" }}>
+                {mediaData && mediaData.description}
+              </Typography>
+            </div>
+            {mediaData && (
+              <div
+                style={{
+                  padding: "1em",
+                  paddingInline: "1em",
+                  objectFit: "contain",
+                }}
+              >
+                <CommentContainer
+                  commentOn={mediaType}
+                  componentID={mediaData.id}
+                />
+              </div>
+            )}
+          </div>
+          <div className={classes.rightBox}>
+            {mediaType === "video" ? (
+              <VideoContainer
+                allVideos={allMedia}
+                gridDirection="column"
+                cardWidth={400}
+                reloadReq={true}
               />
             ) : (
-              <CustomAudioPlayer
-                coverSrc={mediaData.cover}
-                audioSrc={mediaData.file}
-                name={mediaData.title}
-                subheader={mediaData.subheader}
-                playNext={playNextAudio}
+              <AudioContainer
+                allAudios={allMedia}
+                gridDirection="column"
+                cardWidth={380}
+                reloadReq={true}
               />
-            )
-          ) : (
-            ""
-          )}
-        </div>
-        <Typography className={classes.headingText}>
-          {mediaData && mediaData.title}
-        </Typography>
-
-        <div className={classes.mediaDetailsAndAction}>
-          <Typography className={classes.details}>{details}</Typography>
-          <div style={{ flexGrow: 1 }}></div>
-          <div className={classes.actionBtnDiv}>
-            <Button
-              className={classes.actionBtn}
-              variant="contained"
-              color="primary"
-              startIcon={liked ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />}
-              onClick={toggleLike}
-            >
-              Like {abbreviateNumber(likes)}
-            </Button>
-            <Button
-              className={classes.actionBtn}
-              variant="contained"
-              color="primary"
-              startIcon={<ShareIcon />}
-              onClick={handleShare}
-            >
-              Share
-            </Button>
-            <ShareLinkDialog
-              open={openShareDialog}
-              setOpen={setOpenShareDialog}
-              linkAddress={`${window.location.host}/channel/${channelSlug}/${mediaType}/${mediaSlug}`}
-            />
+            )}
           </div>
+        </>
+      ) : (
+        <div className={classes.progressContainer}>
+          <CircularProgress size="7em" thickness={4} />
         </div>
-        <div className={classes.avatarAndFollow}>
-          <Avatar
-            className={classes.mainAvatar}
-            src={mediaData && mediaData.channel.avatar}
-            onClick={() => history.push(`/channel/${mediaData.channel.slug}`)}
-          />
-          <div>
-            <Typography className={classes.channelName}>
-              {mediaData && mediaData.channel.user.username}
-            </Typography>
-            <Typography className={classes.followers}>
-              {abbreviateNumber(followers)} followers
-            </Typography>
-          </div>
-
-          <div style={{ flexGrow: 1 }}></div>
-          <Button
-            className={classes.actionBtn}
-            variant="contained"
-            color={isFollowing ? "secondary" : "primary"}
-            onClick={toggleFollow}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
-        </div>
-        <div className={classes.description}>
-          <Typography
-            style={{
-              fontWeight: "bolder",
-              fontSize: "1.2em",
-              marginBottom: "1em",
-            }}
-          >
-            Description
-          </Typography>
-          <Typography component="pre" style={{ whiteSpace: "pre-wrap" }}>
-            {mediaData && mediaData.description}
-          </Typography>
-        </div>
-        {mediaData && (
-          <div
-            style={{
-              padding: "1em",
-              paddingInline: "1em",
-              objectFit: "contain",
-            }}
-          >
-            <CommentContainer
-              commentOn={mediaType}
-              componentID={mediaData.id}
-            />
-          </div>
-        )}
-      </div>
-      <div className={classes.rightBox}>
-        {mediaType === "video" ? (
-          <VideoContainer
-            allVideos={allMedia}
-            gridDirection="column"
-            cardWidth={400}
-            reloadReq={true}
-          />
-        ) : (
-          <AudioContainer
-            allAudios={allMedia}
-            gridDirection="column"
-            cardWidth={380}
-            reloadReq={true}
-          />
-        )}
-      </div>
+      )}
     </div>
   );
 }

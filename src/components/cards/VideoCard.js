@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   h_root: {
     width: "70%",
     margin: 3,
+
     // border: "2px solid red",
   },
 
@@ -94,10 +95,10 @@ const VideoCard = ({
   duration,
   variant,
   cardWidth,
-  description,
   videoData,
   isLoggedInUser,
   reloadReq,
+  fitHtToText
 }) => {
   const classes = useStyles();
   const maxTitleLen = 25;
@@ -339,7 +340,10 @@ const VideoCard = ({
   return (
     <>
       {showComponent ? (
-        <Card className={classes.root} style={{ width: cardWidth }}>
+        <Card
+          className={classes.root}
+          style={fitHtToText ? {width: cardWidth}:{ width: cardWidth, height: cardWidth * 0.83 }}
+        >
           <Popover
             id={id}
             open={open}

@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 
 function SectionTitle({
   title,
+  noButton,
   btnText,
   EndIcon,
   showForm,
@@ -45,17 +46,21 @@ function SectionTitle({
   return (
     <div ref={headingRef} className={classes.heading}>
       <h1>{title}</h1>
-      {canEdit ? (
-        <Button
-          style={{ height: "3em", marginRight: "2em" }}
-          variant="contained"
-          color="primary"
-          endIcon={<EndIcon />}
-          disabled={showForm}
-          onClick={() => setShowForm(true)}
-        >
-          {btnText}
-        </Button>
+      {!noButton ? (
+        canEdit ? (
+          <Button
+            style={{ height: "3em", marginRight: "2em" }}
+            variant="contained"
+            color="primary"
+            endIcon={<EndIcon />}
+            disabled={showForm}
+            onClick={() => setShowForm(true)}
+          >
+            {btnText}
+          </Button>
+        ) : (
+          ""
+        )
       ) : (
         ""
       )}

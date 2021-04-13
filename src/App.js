@@ -15,6 +15,8 @@ import UserProfile from "./components/channelComponents/UserProfile";
 import UserPosts from "./components/channelComponents/UserPosts";
 import UserVideos from "./components/channelComponents/UserVideos";
 import UserAudios from "./components/channelComponents/UserAudios";
+import UserAnalytics from "./components/channelComponents/UserAnalytics";
+import UserFollowing from "./components/channelComponents/UserFollowing";
 
 import PlayingInterface from "./components/mainInterface/PlayingInterface";
 
@@ -109,6 +111,29 @@ function App() {
             <MainApp
               ChildComponent={() => (
                 <ChannelContainer ChildComponent={UserPosts} />
+              )}
+            />
+          )}
+        />
+        <Route
+          exact
+          from="/channel/:channelSlug/analytics"
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserAnalytics} />
+              )}
+            />
+          )}
+        />
+
+        <Route
+          exact
+          from="/channel/:channelSlug/following"
+          component={() => (
+            <MainApp
+              ChildComponent={() => (
+                <ChannelContainer ChildComponent={UserFollowing} />
               )}
             />
           )}

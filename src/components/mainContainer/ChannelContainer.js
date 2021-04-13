@@ -133,6 +133,7 @@ function ChannelContainer({ ChildComponent }) {
       icon: <Icon>article</Icon>,
       onClick: () => history.push(`/channel/${channelSlug}/posts`),
     },
+
     {
       name: "Analytics",
       icon: <Icon>analytics</Icon>,
@@ -314,7 +315,7 @@ function ChannelContainer({ ChildComponent }) {
           disabled={channelData.id === userState.channelID}
           onClick={addFollower}
         >
-          {isFollowing() ? "Unfollow" : "Follow"}
+          {isFollowing() ? "Followed" : "Follow"}
         </Button>
       </div>
       <ChildComponent
