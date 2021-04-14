@@ -98,7 +98,7 @@ const VideoCard = ({
   videoData,
   isLoggedInUser,
   reloadReq,
-  fitHtToText
+  fitHtToText,
 }) => {
   const classes = useStyles();
   const maxTitleLen = 25;
@@ -342,7 +342,11 @@ const VideoCard = ({
       {showComponent ? (
         <Card
           className={classes.root}
-          style={fitHtToText ? {width: cardWidth}:{ width: cardWidth, height: cardWidth * 0.83 }}
+          style={
+            fitHtToText
+              ? { width: cardWidth }
+              : { width: cardWidth, height: cardWidth * 0.83 }
+          }
         >
           <Popover
             id={id}

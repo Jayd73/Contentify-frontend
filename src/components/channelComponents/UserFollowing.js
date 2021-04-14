@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    // border: "2px solid green",
   },
   followingContainer: {
     margin: "0.5em",
@@ -21,7 +22,16 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     maxHeight: "fit-content",
     width: "85%",
-    // border: "2px solid blue",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    // border: "2px solid green",
+  },
+  message: {
+    textAlign: "center",
+    margin: "2em",
+    fontSize: "2em",
+    color: theme.palette.appBg.darkest,
   },
 }));
 
@@ -34,13 +44,19 @@ function UserFollowing(props) {
       <SectionTitle title={"Following ✅"} noButton={true} />
       <div className={classes.alignStyle}>
         <div className={classes.followingContainer}>
-          {followedChannels.map((channel) => (
-            <ChannelCard
-              channelData={channel}
-              key={channel.id}
-              isUserFollowing={true}
-            />
-          ))}
+          {followedChannels.length > 0 ? (
+            followedChannels.map((channel) => (
+              <ChannelCard
+                channelData={channel}
+                key={channel.id}
+                isUserFollowing={true}
+              />
+            ))
+          ) : (
+            <Typography className={classes.message}>
+              You are not following any channels
+            </Typography>
+          )}
         </div>
       </div>
     </div>

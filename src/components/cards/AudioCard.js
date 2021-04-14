@@ -240,8 +240,7 @@ function AudioCard({
               position: "absolute",
               paddingInline: 0.01 * cardWidth,
               marginTop: 0.355 * cardWidth,
-              marginLeft: 0.255 * cardWidth,
-              // matginLeft: -300,
+              marginLeft: 0.255 * cardWidth - (duration.length > 5 ? 20 : 0),
             }}
           >
             <Typography style={{ fontSize: 0.03 * cardWidth }}>

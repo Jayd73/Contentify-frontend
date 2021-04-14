@@ -86,31 +86,6 @@ const useStyles = makeStyles((theme) => ({
 function ChannelContainer({ ChildComponent }) {
   const classes = useStyles();
   const history = useHistory();
-  const { channelSlug, userPostSlug } = useParams();
-  const [userState, setUserState] = useUserState();
-  const [channelData, setChannelData] = useState({});
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [snackbarMsg, setSnackbarMsg] = React.useState(false);
-
-  let [userIsFollowing, setUserIsFollowing] = useState();
-
-  useEffect(() => {
-    axiosInstance
-      .get(`channel/${channelSlug}/`)
-      .then((res) => {
-        setChannelData(res.data);
-
-        // console.log("Res: ", isFollowing());
-      })
-      .catch((err) => {
-        console.log("Error while fetching: \n", err);
-      });
-    setUserState({
-      ...userState,
-      setSnackbarOpen: setOpenSnackbar,
-      setSnackbarMsg: setSnackbarMsg,
-    });
-  }, [setChannelData]);
 
   const channelSection = [
     {
@@ -133,13 +108,62 @@ function ChannelContainer({ ChildComponent }) {
       icon: <Icon>article</Icon>,
       onClick: () => history.push(`/channel/${channelSlug}/posts`),
     },
-
-    {
-      name: "Analytics",
-      icon: <Icon>analytics</Icon>,
-      onClick: () => history.push(`/channel/${channelSlug}/analytics`),
-    },
   ];
+
+  const { channelSlug, userPostSlug } = useParams();
+  const [userState, setUserState] = useUserState();
+  const [channelData, setChannelData] = useState({});
+  const [channelSections, setChannelSections] = useState(channelSection);
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarMsg, setSnackbarMsg] = React.useState(false);
+
+  let [userIsFollowing, setUserIsFollowing] = useState();
+
+  useEffect(() => {
+    axiosInstance
+      .get(`channel/${channelSlug}/`)
+      .then((res) => {
+        setChannelData(res.data);
+        if (res.data.id === userState.moreChannelData.id) {
+          setChannelSections([
+            ...channelSections,
+            {
+              name: "Following",
+              icon: <Icon>person_add</Icon>,
+              onClick: () => {
+                axiosInstance
+                  .get(`/channel/${userState.moreChannelData.id}/`)
+                  .then((res) => {
+                    const followedChannels = res.data.followedChannels;
+                    console.log("followed: \n", followedChannels);
+                    history.push({
+                      pathname: `/channel/${userState.moreChannelData.slug}/following`,
+                      state: followedChannels,
+                    });
+                  })
+                  .catch((err) => {
+                    console.log("Error from API: ", err);
+                  });
+              },
+            },
+            {
+              name: "Analytics",
+              icon: <Icon>analytics</Icon>,
+              onClick: () => history.push(`/channel/${channelSlug}/analytics`),
+            },
+          ]);
+        }
+        // console.log("Res: ", isFollowing());
+      })
+      .catch((err) => {
+        console.log("Error while fetching: \n", err);
+      });
+    setUserState({
+      ...userState,
+      setSnackbarOpen: setOpenSnackbar,
+      setSnackbarMsg: setSnackbarMsg,
+    });
+  }, [setChannelData]);
 
   function isFollowing() {
     if (userIsFollowing) {
@@ -225,7 +249,7 @@ function ChannelContainer({ ChildComponent }) {
         >
           CHANNEL
         </ListSubheader>
-        {channelSection.map((item) => (
+        {channelSections.map((item) => (
           <ListItem button key={item.name} onClick={item.onClick}>
             <ListItemIcon className={classes.iconStyle}>
               {item.icon}

@@ -41,6 +41,7 @@ const AudioContainer = (props) => {
     audioList.map((audio) => (
       <Grid item key={audio.uid}>
         <AudioCard
+          key={audio.uid}
           avatarSrc={audio.channel.avatar}
           imgSrc={audio.cover}
           title={audio.title}

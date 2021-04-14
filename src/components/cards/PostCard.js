@@ -20,8 +20,6 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CommentIcon from "@material-ui/icons/Comment";
-import CommentCard from "./CommentCard";
-import TextField from "@material-ui/core/TextField";
 import { Button } from "@material-ui/core";
 
 import DeleteIcon from "@material-ui/icons/Delete";

@@ -36,28 +36,15 @@ export function shuffleArr(array) {
   return array;
 }
 
-export function abbreviateNumber(value) {
-  var newValue = value;
-  if (value >= 1000) {
-    var suffixes = ["", "K", "M", "B", "T"];
-    var suffixNum = Math.floor(("" + value).length / 3);
-    var shortValue = "";
-    for (var precision = 2; precision >= 1; precision--) {
-      shortValue = parseFloat(
-        (suffixNum != 0
-          ? value / Math.pow(1000, suffixNum)
-          : value
-        ).toPrecision(precision)
-      );
-      var dotLessShortValue = (shortValue + "").replace(/[^a-zA-Z 0-9]+/g, "");
-      if (dotLessShortValue.length <= 2) {
-        break;
-      }
-    }
-    if (shortValue % 1 != 0) shortValue = shortValue.toFixed(1);
-    newValue = shortValue + suffixes[suffixNum];
-  }
-  return newValue;
+function intlFormat(num) {
+  return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
+}
+
+export function abbreviateNumber(num) {
+  if (num >= 1000000000) return intlFormat(num / 1000000000) + "B";
+  if (num >= 1000000) return intlFormat(num / 1000000) + "M";
+  if (num >= 1000) return intlFormat(num / 1000) + "K";
+  return intlFormat(num);
 }
 
 export function getTimeFromSecs(given_seconds) {

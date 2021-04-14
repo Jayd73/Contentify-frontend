@@ -47,7 +47,7 @@ const VideoContainer = (props) => {
     videoList.map((video) => (
       <Grid item key={video.uid}>
         <VideoCard
-          // key={video.id}
+          key={video.uid}
           avatarSrc={video.channel.avatar}
           imgSrc={video.thumbnail}
           title={video.title}

@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     maxHeight: "fit-content",
     width: "85%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
     // border: "2px solid blue",
   },
 }));
@@ -47,7 +50,19 @@ function SearchHandler() {
   return (
     <div>
       {searchRes ? (
-        filterValue == "video" ? (
+        searchRes.length == 0 ? (
+          <Typography
+            style={{
+              fontSize: "2.5em",
+              fontWeight: "bold",
+              opacity: 0.6,
+              margin: "5em",
+              textAlign: "center",
+            }}
+          >
+            No results found
+          </Typography>
+        ) : filterValue == "video" ? (
           <VideoContainer
             allVideos={searchRes}
             variant={"horizontal"}
@@ -85,7 +100,7 @@ function SearchHandler() {
             textAlign: "center",
           }}
         >
-          {/* No results found */}
+          Getting results...
         </Typography>
       )}
     </div>
