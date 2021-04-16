@@ -98,7 +98,7 @@ function CreatePostForm({ setShowForm }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (textContent.length == 0) {
+    if (textContent.length == 0 && !userPostImg) {
       return;
     }
     let formData = new FormData();

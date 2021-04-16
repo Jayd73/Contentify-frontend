@@ -84,7 +84,7 @@ function AudioCard({
 }) {
   const classes = useStyles();
   const maxTitleLen = 45;
-  const maxCreatorNameLen = 26;
+  const maxCreatorNameLen = 25;
   const maxDetailsLen = 90;
   const coverWidth = 0.35 * cardWidth;
   const listensForm = listens == 1 ? "listen" : "listens";

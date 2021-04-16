@@ -26,6 +26,7 @@ import Icon from "@material-ui/core/Icon";
 
 import Snackbar from "@material-ui/core/Snackbar";
 import { abbreviateNumber } from "../miscellaneous/HelperFunctions";
+import { Divider } from "@material-ui/core";
 
 const drawerWidth = 220;
 
@@ -80,6 +81,10 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     display: "none",
+  },
+  dividerStyle: {
+    backgroundColor: theme.palette.appBg.darkest,
+    margin: "0.5em 0em",
   },
 }));
 
@@ -250,12 +255,19 @@ function ChannelContainer({ ChildComponent }) {
           CHANNEL
         </ListSubheader>
         {channelSections.map((item) => (
-          <ListItem button key={item.name} onClick={item.onClick}>
-            <ListItemIcon className={classes.iconStyle}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.name} />
-          </ListItem>
+          <>
+            {item.name == "Following" ? (
+              <Divider className={classes.dividerStyle} />
+            ) : (
+              ""
+            )}
+            <ListItem button key={item.name} onClick={item.onClick}>
+              <ListItemIcon className={classes.iconStyle}>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.name} />
+            </ListItem>
+          </>
         ))}
       </List>
     </div>
