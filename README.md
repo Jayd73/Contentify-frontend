@@ -1,3 +1,7 @@
+# About Contentify:
+Contentify is about offering an online sharing platform for digital content like videos, 
+podcasts, music, audiobooks, etc. where creators can create their content and post it on the website for other people to view, listen and share.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
