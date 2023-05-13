@@ -7,7 +7,7 @@ podcasts, music, audiobooks, etc. where creators can create their content and po
 Web app screenshots:
 
 Streaming videos and audios:
-![Video recommendation](https://drive.google.com/file/d/10z9gwIZFNiOukbFI9EB_pZgtlbzXFy1Q/view?usp=sharing)
+![Video recommendation](https://drive.google.com/file/d/10z9gwIZFNiOukbFI9EB_pZgtlbzXFy1Q/view)
 
 More screenshots can be viewed at:
 https://drive.google.com/drive/folders/1x1vhmOk6m3GNsrx02wwxv_gHAc9b_sIH?usp=sharing
