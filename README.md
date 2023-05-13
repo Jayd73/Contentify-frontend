@@ -4,12 +4,7 @@ This is the Final year project for B.Sc. CS course. This project is created usin
 Contentify is about offering an online sharing platform for digital content like videos, 
 podcasts, music, audiobooks, etc. where creators can create their content and post it on the website for other people to view, listen and share.
 
-Web app screenshots:
-
-Streaming videos and audios:
-![Video recommendation](https://drive.google.com/file/d/10z9gwIZFNiOukbFI9EB_pZgtlbzXFy1Q/view)
-
-More screenshots can be viewed at:
+Web app screenshots can be viewed at:
 https://drive.google.com/drive/folders/1x1vhmOk6m3GNsrx02wwxv_gHAc9b_sIH?usp=sharing
 
 # Getting Started with Create React App
